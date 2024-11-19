@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\OTPController;
+use App\Http\Controllers\PincodeController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -27,10 +28,12 @@ Route::middleware('auth')->group(function () {
 
 
 // otp verification routes
-Route::post('/send-email-otp', [OTPController::class, 'sendEmailOtp']);
-Route::post('/verify-email-otp', [OTPController::class, 'verifyEmailOtp']);
-Route::post('/send-mobile-otp', [OTPController::class, 'sendMobileOtp']);
-Route::post('/verify-mobile-otp', [OTPController::class, 'verifyMobileOtp']);
+Route::post('/send-email-otp', [OTPController::class, 'sendEmailOtp'])->name('sendEmailOtp');
+Route::post('/verify-email-otp', [OTPController::class, 'verifyEmailOtp'])->name('verifyEmailOtp');
+Route::post('/send-mobile-otp', [OTPController::class, 'sendMobileOtp'])->name('sendMobileOtp');
+Route::post('/verify-mobile-otp', [OTPController::class, 'verifyMobileOtp'])->name('verifyMobileOtp');
+Route::post('/fetch-pincode-details', [PincodeController::class, 'fetchDetailsByPincode']);
+
 
 
 require __DIR__.'/auth.php';

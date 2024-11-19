@@ -14,7 +14,12 @@ class OTPController extends Controller
 {
     public function sendEmailOtp(Request $request)
     {
-        $request->validate(['email' => 'required|email']);
+        // dd($request->email);
+
+        // Validate the email input
+        $request->validate([
+            'email' => 'required|email',
+        ]);
 
         $otp = rand(100000, 999999);
         $request->session()->put('email_otp', $otp);
@@ -26,7 +31,8 @@ class OTPController extends Controller
                 ->subject('Email OTP Verification');
         });
 
-        return response()->json(['message' => 'OTP sent to email successfully.']);
+        // Redirect back with a success message (you can use session to flash the success message)
+        return redirect()->back()->with('success', 'OTP sent to your email successfully.');
     }
 
     public function verifyEmailOtp(Request $request)
@@ -38,25 +44,29 @@ class OTPController extends Controller
 
         if ($request->otp == $sessionOtp) {
             $request->session()->forget('email_otp');
-            return response()->json(['message' => 'Email verified successfully.']);
+            return redirect()->back()->with(['success' => 'Email verified successfully.']);
         }
 
-        return response()->json(['message' => 'Invalid OTP.'], 422);
+        // Redirect back with a success message (you can use session to flash the success message)
+        return redirect()->back()->withErrors(['otp' => 'Invalid OTP.'])->withInput();
     }
 
     public function sendMobileOtp(Request $request)
     {
+
         $request->validate(['mobile' => 'required|digits:10']);
 
         $otp = rand(100000, 999999);
         $request->session()->put('mobile_otp', $otp);
         $request->session()->put('mobile', $request->mobile);
-        Log::info('Email OTP for ' . $request->email . ': ' . $otp);
+        Log::info('Mobile OTP for ' . $request->mobile . ': ' . $otp);
 
         // Use an SMS service here
         // For example: Twilio, Nexmo, etc.
         // For demonstration, we're just returning the OTP
-        return response()->json(['message' => 'OTP sent to mobile successfully.', 'otp' => $otp]);
+
+        // Redirect back with a success message (you can use session to flash the success message)
+        return redirect()->back()->with('success', 'OTP sent to your mobile successfully.');
     }
 
     public function verifyMobileOtp(Request $request)
@@ -67,9 +77,10 @@ class OTPController extends Controller
 
         if ($request->otp == $sessionOtp) {
             $request->session()->forget('mobile_otp');
-            return response()->json(['message' => 'Mobile verified successfully.']);
+            return redirect()->back()->with(['success' => 'Mobile number verified successfully.']);
         }
 
-        return response()->json(['message' => 'Invalid OTP.'], 422);
+        // Redirect back with a success message (you can use session to flash the success message)
+        return redirect()->back()->withErrors(['otp' => 'Invalid OTP.'])->withInput();
     }
 }
