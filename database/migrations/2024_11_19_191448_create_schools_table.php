@@ -15,9 +15,12 @@ return new class extends Migration
             $table->id();
 
             // School Information
+            $table->string('school_uuid')->unique();;
             $table->string('school_name');
             $table->string('school_email')->unique(); // Ensure email is unique
+            $table->string('school_email_otp', 6);
             $table->string('school_mobile')->unique(); // Ensure mobile number is unique
+            $table->string('school_mobile_otp', 6);
             $table->text('school_address_line_1');
             $table->string('school_area');
             $table->string('school_pincode');

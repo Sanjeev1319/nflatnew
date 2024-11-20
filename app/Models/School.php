@@ -17,9 +17,12 @@ class School extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
+        'school_uuid',
         'school_name',
         'school_email',
+        'school_email_otp',
         'school_mobile',
+        'school_mobile_otp',
         'incharge_name',
         'incharge_email',
         'incharge_mobile',
@@ -31,6 +34,7 @@ class School extends Authenticatable
         'school_pincode',
         'school_district',
         'school_state',
+        'password',
         'email_verified_at',
         'mobile_verified_at',
     ];

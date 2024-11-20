@@ -18,7 +18,7 @@ class OTPController extends Controller
 
         // Validate the email input
         $request->validate([
-            'email' => 'required|email',
+            'email' => 'required|email|unique:schools,school_email|max:255',
         ]);
 
         $otp = rand(100000, 999999);
@@ -54,7 +54,7 @@ class OTPController extends Controller
     public function sendMobileOtp(Request $request)
     {
 
-        $request->validate(['mobile' => 'required|digits:10']);
+        $request->validate(['mobile' => 'required|digits:10|unique:schools,school_mobile']);
 
         $otp = rand(100000, 999999);
         $request->session()->put('mobile_otp', $otp);

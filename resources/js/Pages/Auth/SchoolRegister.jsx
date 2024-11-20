@@ -347,7 +347,7 @@ export default function Register() {
                                     required
                                 />
                                 {!emailOtpSent && !emailVerified && (
-                                    <PrimaryButton onClick={sendEmailOtp}>
+                                    <PrimaryButton onClick={sendEmailOtp} >
                                         Send OTP
                                     </PrimaryButton>
                                 )}
@@ -593,6 +593,7 @@ export default function Register() {
                         <div className="sm:px-8 py-4 px-4 border-gray-900/10 border-t gap-6 justify-end items-center flex">
                             <PrimaryButton
                                 disabled={!emailVerified || !mobileVerified}
+                                type="submit"
                             >
                                 Register
                             </PrimaryButton>

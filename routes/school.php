@@ -1,18 +1,20 @@
 <?php
 
-use App\Http\Controllers\School\SchoolRegister;
+use App\Http\Controllers\School\SchoolDashboardController;
+use App\Http\Controllers\School\SchoolLoginController;
+use App\Http\Controllers\School\SchoolRegisterController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest')->prefix('school')->name('school.')->group(function () {
-    Route::get('register', [SchoolRegister::class, 'create'])
+    Route::get('register', [SchoolRegisterController::class, 'create'])
         ->name('register');
 
-    Route::post('register', [SchoolRegister::class, 'store']);
+    Route::post('register', [SchoolRegisterController::class, 'store']);
 
-    // Route::get('login', [AuthenticatedSessionController::class, 'create'])
-    //     ->name('login');
+    Route::get('login', [SchoolLoginController::class, 'create'])
+        ->name('login');
 
-    // Route::post('login', [AuthenticatedSessionController::class, 'store']);
+    Route::post('login', [SchoolLoginController::class, 'store']);
 
     // Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])
     //     ->name('password.request');
@@ -26,27 +28,31 @@ Route::middleware('guest')->prefix('school')->name('school.')->group(function ()
     // Route::post('reset-password', [NewPasswordController::class, 'store'])
     //     ->name('password.store');
 });
-/*
-Route::middleware('auth')->group(function () {
-    Route::get('verify-email', EmailVerificationPromptController::class)
-        ->name('verification.notice');
 
-    Route::get('verify-email/{id}/{hash}', VerifyEmailController::class)
-        ->middleware(['signed', 'throttle:6,1'])
-        ->name('verification.verify');
+Route::middleware('auth:school')->prefix('school')->name('school.')->group(function () {
 
-    Route::post('email/verification-notification', [EmailVerificationNotificationController::class, 'store'])
-        ->middleware('throttle:6,1')
-        ->name('verification.send');
+	Route::post('logout', [SchoolLoginController::class, 'destroy'])->name('logout');
 
-    Route::get('confirm-password', [ConfirmablePasswordController::class, 'show'])
-        ->name('password.confirm');
+	Route::get('dashboard', [SchoolDashboardController::class, 'index'])->name('dashboard');
 
-    Route::post('confirm-password', [ConfirmablePasswordController::class, 'store']);
+    // Route::get('verify-email', EmailVerificationPromptController::class)
+    //     ->name('verification.notice');
 
-    Route::put('password', [PasswordController::class, 'update'])->name('password.update');
+    // Route::get('verify-email/{id}/{hash}', VerifyEmailController::class)
+    //     ->middleware(['signed', 'throttle:6,1'])
+    //     ->name('verification.verify');
 
-    Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
-        ->name('logout');
+    // Route::post('email/verification-notification', [EmailVerificationNotificationController::class, 'store'])
+    //     ->middleware('throttle:6,1')
+    //     ->name('verification.send');
+
+    // Route::get('confirm-password', [ConfirmablePasswordController::class, 'show'])
+    //     ->name('password.confirm');
+
+    // Route::post('confirm-password', [ConfirmablePasswordController::class, 'store']);
+
+    // Route::put('password', [PasswordController::class, 'update'])->name('password.update');
+
+
 });
-*/
+

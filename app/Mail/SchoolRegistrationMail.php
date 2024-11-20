@@ -13,14 +13,20 @@ class SchoolRegistrationMail extends Mailable
 {
     use Queueable, SerializesModels;
 
+    public $school_name;
+    public $school_email;
     public $password;
+    public $school_uuid;
 
     /**
      * Create a new message instance.
      */
-    public function __construct($password)
+    public function __construct($school_name, $school_email, $password, $school_uuid)
     {
+        $this->school_name = $school_name;
+        $this->school_email = $school_email;
         $this->password = $password;
+        $this->school_uuid = $school_uuid;
     }
 
     /**
@@ -39,9 +45,12 @@ class SchoolRegistrationMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.school_registration', // Specify the email view here
+            view: 'emails.school_registration', // Specify the email view
             with: [
-                'password' => $this->password, // Pass the password to the view
+                'school_name' => $this->school_name,
+                'school_email' => $this->school_email,
+                'password' => $this->password, // Pass all necessary data to the view
+                'school_uuid' => $this->school_uuid, // Pass all necessary data to the view
             ]
         );
     }
