@@ -31,10 +31,16 @@ export default function AuthenticatedLayout({ header, children }) {
 									Dashboard
 								</NavLink>
 								<NavLink
-									href={route("school.individualRegister")}
-									active={route().current("school.individualRegister")}
+									href={route("school.studentRegister")}
+									active={route().current("school.studentRegister")}
 								>
-									Individual Register
+									Student Register
+								</NavLink>
+								<NavLink
+									href={route("school.studentBulkRegister")}
+									active={route().current("school.studentBulkRegister")}
+								>
+									Student Bulk Register
 								</NavLink>
 							</div>
 						</div>

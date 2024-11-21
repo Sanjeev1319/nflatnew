@@ -3,6 +3,7 @@
 use App\Http\Controllers\OTPController;
 use App\Http\Controllers\PincodeController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\School\SchoolDashboardController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -36,6 +37,11 @@ Route::post('/verify-mobile-otp', [OTPController::class, 'verifyMobileOtp'])->na
 Route::post('/fetch-pincode-details', [PincodeController::class, 'fetchDetailsByPincode']);
 
 
+
+// API LIST
+// 1. Student bulk upload api
+// Route::post('/students/import', [SchoolDashboardController::class, 'import'])->name('studentUploadApi');
+Route::post('/upload-students', [SchoolDashboardController::class, 'import'])->name('upload-students');
 
 require __DIR__.'/auth.php';
 require __DIR__.'/school.php';

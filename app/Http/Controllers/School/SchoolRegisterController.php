@@ -52,7 +52,7 @@ class SchoolRegisterController extends Controller
 
         // Generate a random 8-character alphanumeric password
         $randomPassword = str::random(8);
-        $school_uuid = strtoupper(Str::random(10));;
+        $school_uuid = strtoupper(Str::random(10));
         $school_name = $request->school_name;
         $school_email = $request->school_email;
 
