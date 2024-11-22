@@ -42,6 +42,12 @@ export default function AuthenticatedLayout({ header, children }) {
 								>
 									Student Bulk Register
 								</NavLink>
+								<NavLink
+									href={route("school.studentList")}
+									active={route().current("school.studentList")}
+								>
+									Student List
+								</NavLink>
 							</div>
 						</div>
 

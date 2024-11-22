@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useForm } from "@inertiajs/react";
+import { Link, useForm } from "@inertiajs/react";
 import PrimaryButton from "@/Components/PrimaryButton";
 import TextInput from "@/Components/TextInput";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
@@ -67,6 +67,16 @@ export default function StudentBulkRegister({
 								/>
 								<PrimaryButton type="submit">Upload</PrimaryButton>
 							</form>
+
+							<div>
+								<a
+									href="/storage/samples/student_bulk_register.xlsx"
+									download
+									className="text-green-700 underline hover:text-green-900 hover:font-semibold"
+								>
+									Click Here to Download the Sample file
+								</a>
+							</div>
 
 							{/* Message Display */}
 							{message && <p className="text-red-500">{message}</p>}

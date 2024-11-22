@@ -1,7 +1,13 @@
+import DataTable from "@/Components/DataTable";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head } from "@inertiajs/react";
 
-export default function Dashboard({ success, route }) {
+export default function StudentList({
+	success,
+	route,
+	students,
+	studentCount,
+}) {
 	return (
 		<AuthenticatedLayout
 			header={
@@ -25,17 +31,7 @@ export default function Dashboard({ success, route }) {
 										New
 									</span>
 									<span class="font-semibold mr-2 text-left flex-auto">
-										{success}{" "}
-										{route && (
-											<span>
-												<a
-													href={route}
-													className="text-green-200 hover:text-green-100"
-												>
-													Click here to view list.
-												</a>
-											</span>
-										)}
+										{success}
 									</span>
 								</div>
 							</div>
@@ -47,7 +43,10 @@ export default function Dashboard({ success, route }) {
 			<div className="py-12">
 				<div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
 					<div className="overflow-hidden bg-white shadow-sm sm:rounded-lg">
-						<div className="p-6 text-gray-900">You're logged in!</div>
+						<div className="p-6 text-gray-900">
+							{/* {JSON.stringify(students, null, 2)} */}
+							<DataTable tableValues={students} count={studentCount} />
+						</div>
 					</div>
 				</div>
 			</div>

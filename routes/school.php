@@ -36,8 +36,11 @@ Route::middleware('auth:school')->prefix('school')->name('school.')->group(funct
 	Route::get('dashboard', [SchoolDashboardController::class, 'index'])->name('dashboard');
 
 	Route::get('student_register', [SchoolDashboardController::class, 'studentRegister'])->name('studentRegister');
+	Route::post('student_register', [SchoolDashboardController::class, 'studentRegisterStore']);
 
 	Route::get('student_bulk_register', [SchoolDashboardController::class, 'studentBulkRegister'])->name('studentBulkRegister');
+
+	Route::get('student_list', [SchoolDashboardController::class, 'studentList'])->name('studentList');
 
     // Route::get('verify-email', EmailVerificationPromptController::class)
     //     ->name('verification.notice');
