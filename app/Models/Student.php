@@ -3,10 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-class Student extends Model
+class Student extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
@@ -17,7 +18,8 @@ class Student extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'uuid',
+        'student_uuid',
+        'school_uuid',
 				'gender',
 				'student_name',
 				'student_class',
@@ -26,7 +28,10 @@ class Student extends Model
 				'parent_name',
 				'parent_email_id',
 				'parent_mobile_number',
-				'pass',
+				'password',
+				'attempts',
+				'allowed_attempts',
+				'last_login',
         'email_verified_at',
         'mobile_verified_at',
     ];
@@ -37,7 +42,7 @@ class Student extends Model
      * @var array<int, string>
      */
     protected $hidden = [
-        'password'
+        // 'password'
     ];
 
 		/**
@@ -50,8 +55,12 @@ class Student extends Model
         return [
             'email_verified_at' => 'datetime',
             'mobile_verified_at' => 'datetime',
-            'password' => 'hashed',
+						'password' => 'encrypted'
         ];
     }
 
+		public function school()
+    {
+        return $this->belongsTo(School::class);
+    }
 }

@@ -357,8 +357,8 @@ class ComposerStaticInit44fda9102f94816fee0a4c366aa9a659
         ),
         'Psr\\Http\\Message\\' => 
         array (
-            0 => __DIR__ . '/..' . '/psr/http-factory/src',
-            1 => __DIR__ . '/..' . '/psr/http-message/src',
+            0 => __DIR__ . '/..' . '/psr/http-message/src',
+            1 => __DIR__ . '/..' . '/psr/http-factory/src',
         ),
         'Psr\\Http\\Client\\' => 
         array (
@@ -594,6 +594,7 @@ class ComposerStaticInit44fda9102f94816fee0a4c366aa9a659
         'App\\Http\\Requests\\Auth\\LoginRequest' => __DIR__ . '/../..' . '/app/Http/Requests/Auth/LoginRequest.php',
         'App\\Http\\Requests\\Auth\\SchoolLoginRequest' => __DIR__ . '/../..' . '/app/Http/Requests/Auth/SchoolLoginRequest.php',
         'App\\Http\\Requests\\ProfileUpdateRequest' => __DIR__ . '/../..' . '/app/Http/Requests/ProfileUpdateRequest.php',
+        'App\\Http\\Resources\\StudentListResource' => __DIR__ . '/../..' . '/app/Http/Resources/StudentListResource.php',
         'App\\Imports\\StudentsImport' => __DIR__ . '/../..' . '/app/Imports/StudentsImport.php',
         'App\\Mail\\SchoolRegistrationMail' => __DIR__ . '/../..' . '/app/Mail/SchoolRegistrationMail.php',
         'App\\Models\\Pincode' => __DIR__ . '/../..' . '/app/Models/Pincode.php',

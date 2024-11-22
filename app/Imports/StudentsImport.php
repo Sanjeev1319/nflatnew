@@ -20,6 +20,7 @@ class StudentsImport implements ToCollection, WithHeadingRow
      */
     public function collection(Collection $rows)
     {
+			$school_uuid = auth('school')->user()->school_uuid;
         foreach ($rows as $index => $row) {
             $rowNumber = $index + 2; // Account for the heading row
 
@@ -62,7 +63,8 @@ class StudentsImport implements ToCollection, WithHeadingRow
                 ];
             } else {
                 // Check for duplicate entry
-                $duplicate = Student::where('student_name', $row['name'])
+                $duplicate = Student::where('school_uuid', $school_uuid)
+										->where('student_name', $row['name'])
                     ->where('student_class', $row['class'])
                     ->where('student_section', $row['section'])
                     ->where('date_of_birth', Carbon::createFromFormat('d-m-Y', $row['dob'])->format('Y-m-d'))
@@ -79,10 +81,10 @@ class StudentsImport implements ToCollection, WithHeadingRow
                 } else {
 
 									// Fetch the last student with UUID
-									$lastStudent = Student::latest('uuid')->first(); // Assuming 'uuid' is the column storing the UUIDs
+									$lastStudent = Student::latest('student_uuid')->first(); // Assuming 'uuid' is the column storing the UUIDs
 
 									// Extract the numeric part from the last UUID (e.g., 'UUID-10001')
-									$lastNumber = $lastStudent ? (int) substr($lastStudent->uuid,0) : 10000;  // Default to 10000 if no student exists
+									$lastNumber = $lastStudent ? (int) substr($lastStudent->student_uuid,0) : 10000;  // Default to 10000 if no student exists
 
 									// Increment the number
 									$newNumber = $lastNumber + 1;
@@ -90,12 +92,13 @@ class StudentsImport implements ToCollection, WithHeadingRow
 									// Generate the new UUID (e.g., UUID-10001, UUID-10002, ...)
 									$newUuid = $newNumber;
 
-									$password = base64_encode(strtoupper(Str::random(8)));
+									$password = strtoupper(Str::random(8));
 
                     // Insert valid data into the database
                     Student::create([
-                        'pass' => $password,
-												'uuid' => $newUuid,
+                        'password' => $password,
+												'student_uuid' => $newUuid,
+												'school_uuid' => $school_uuid,
                         'student_name' => $row['name'],
                         'student_class' => $row['class'],
                         'student_section' => $row['section'],

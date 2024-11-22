@@ -14,7 +14,7 @@ class NFLATCategorySeeder extends Seeder
     public function run(): void
     {
         // Inserting data into the NFLATCategory table
-        DB::table('NFLATCategories')->insert([
+        DB::table('nflatcategories')->insert([
             ['class' => '6', 'category' => 'Junior'],
             ['class' => '7', 'category' => 'Junior'],
             ['class' => '8', 'category' => 'Junior'],

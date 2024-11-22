@@ -40,7 +40,7 @@ export default function DataTable({ tableValues, count }) {
 					<thead className="text-xs text-white dark:text-lime-300 border-b-2 border-violet-500 dark:bg-slate-600 uppercase bg-violet-950">
 						<tr className="text-nowrap text-xs">
 							<TableHeading name={"id"}>#</TableHeading>
-							<TableHeading name={"uuid"}>ID</TableHeading>
+							<TableHeading name={"student_uuid"}>ID</TableHeading>
 							<TableHeading name={"student_name"}>Name</TableHeading>
 							<TableHeading name={"student_class"}>Class</TableHeading>
 							<TableHeading name={"date_of_birth"}>Date of Birth</TableHeading>
@@ -63,7 +63,7 @@ export default function DataTable({ tableValues, count }) {
 								className="border-violet-400 border-b hover:bg-violet-100"
 							>
 								<td className="px-3 py-3">{startingIndex + index}</td>
-								<td className="px-3 py-3">{student.uuid}</td>
+								<td className="px-3 py-3">{student.student_uuid}</td>
 								<td className="px-3 py-3">{student.student_name}</td>
 								<td className="px-3 py-3">
 									{student.student_class} - {student.student_section}
@@ -77,13 +77,13 @@ export default function DataTable({ tableValues, count }) {
 								<td className="px-3 py-3">
 									{student.parent_mobile_number || "N/A"}
 								</td>
-								<td className="px-3 py-3">{student.pass}</td>
+								<td className="px-3 py-3">{student.password}</td>
 								<td className="text-center">Edit</td>
 							</tr>
 						))}
 					</tbody>
 				</table>
-				{/* {JSON.stringify(tableValues, null, 2)} */}
+				{/* <pre>{JSON.stringify(tableValues, undefined, 2)}</pre> */}
 			</div>
 			{typeof tableValues.meta === "undefined" ||
 			typeof tableValues.meta.links === "undefined" ? null : (

@@ -45,3 +45,4 @@ Route::post('/upload-students', [SchoolDashboardController::class, 'import'])->n
 
 require __DIR__.'/auth.php';
 require __DIR__.'/school.php';
+require __DIR__.'/student.php';

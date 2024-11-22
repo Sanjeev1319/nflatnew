@@ -62,4 +62,9 @@ class School extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+	public function student()
+	{
+			return $this->hasMany(Student::class);
+	}
 }

@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Crypt;
 
 class StudentListResource extends JsonResource
 {
@@ -20,7 +21,8 @@ class StudentListResource extends JsonResource
 	{
 		return [
 			"id"=> $this->id,
-			"uuid"=> $this->uuid,
+			"student_uuid"=> $this->student_uuid,
+			"school_uuid"=> $this->school_uuid,
 			"student_name"=> $this->student_name,
 			"student_class"=> $this->student_class,
 			"student_section"=> $this->student_section,
@@ -29,7 +31,7 @@ class StudentListResource extends JsonResource
 			"parent_name"=> $this->parent_name,
 			"parent_email_id"=> $this->parent_email_id,
 			"parent_mobile_number"=> $this->parent_mobile_number,
-			"pass"=> base64_decode($this->pass),
+			"password"=> $this->password,
 		];
 	}
 }

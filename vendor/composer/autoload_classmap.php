@@ -26,6 +26,7 @@ return array(
     'App\\Http\\Requests\\Auth\\LoginRequest' => $baseDir . '/app/Http/Requests/Auth/LoginRequest.php',
     'App\\Http\\Requests\\Auth\\SchoolLoginRequest' => $baseDir . '/app/Http/Requests/Auth/SchoolLoginRequest.php',
     'App\\Http\\Requests\\ProfileUpdateRequest' => $baseDir . '/app/Http/Requests/ProfileUpdateRequest.php',
+    'App\\Http\\Resources\\StudentListResource' => $baseDir . '/app/Http/Resources/StudentListResource.php',
     'App\\Imports\\StudentsImport' => $baseDir . '/app/Imports/StudentsImport.php',
     'App\\Mail\\SchoolRegistrationMail' => $baseDir . '/app/Mail/SchoolRegistrationMail.php',
     'App\\Models\\Pincode' => $baseDir . '/app/Models/Pincode.php',

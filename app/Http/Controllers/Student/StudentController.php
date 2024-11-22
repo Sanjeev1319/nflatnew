@@ -1,27 +1,26 @@
 <?php
 
-namespace App\Http\Controllers\School;
+namespace App\Http\Controllers\Student;
 
 use App\Imports\StudentsImport;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\StudentListResource;
 use App\Models\Student;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Maatwebsite\Excel\Facades\Excel;  // Make sure you import the Excel facade correctly
 use Illuminate\Support\Str;
 
-class SchoolDashboardController extends Controller
+class StudentController extends Controller
 {
     /**
      * Display the login view.
      */
-    public function index()
+    public function studentInstruction()
     {
-        return Inertia::render('School/Dashboard', [
+        return Inertia::render('Student/Instructions', [
             'success' => session('success'),
 						'route' => session('route'),
         ]);
@@ -48,7 +47,6 @@ class SchoolDashboardController extends Controller
      */
     public function studentRegisterStore(Request $request)
     {
-			$school_uuid = auth('school')->user()->school_uuid;
         $request->validate([
             'name' => 'required|string|max:255',
             'section' => 'required|string|max:10',
@@ -61,8 +59,7 @@ class SchoolDashboardController extends Controller
         ]);
 
 				// Check for duplicates based on name, section, dob, gender, and parent_name
-				$duplicate = Student::where('school_uuid', $school_uuid)
-						->where('student_name', $request->name)
+				$duplicate = Student::where('student_name', $request->name)
 						->where('student_section', $request->section)
 						->where('student_class', $request->class)
 						->where('date_of_birth', $request->dob)
@@ -89,8 +86,10 @@ class SchoolDashboardController extends Controller
 					// Generate the new UUID (e.g., UUID-10001, UUID-10002, ...)
 					$newUuid = $newNumber;
 
-					$password = strtoupper(Str::random(8));
+					$password = base64_encode(strtoupper(Str::random(8)));
 					// dd($password);
+
+		$school_uuid = auth('school')->user()->school_uuid;
 
 					Student::create([
 						'student_uuid' => $newUuid,
@@ -103,7 +102,7 @@ class SchoolDashboardController extends Controller
 						'parent_name' => $request->parent_name,
 						'parent_email_id' => $request->parent_email,
 						'parent_mobile_number' => $request->parent_mobile,
-						'password' => $password,
+						'pass' => $password,
           ]);
 
 					return redirect()->route('school.dashboard')->with('success','Student registered successfully.');
@@ -163,12 +162,11 @@ class SchoolDashboardController extends Controller
      */
     public function studentList()
     {
-			$school_uuid = auth('school')->user()->school_uuid;
-			$students = Student::query()->where('school_uuid', $school_uuid)->paginate(20);
-			$studentCount = Student::query()->where('school_uuid', $school_uuid)->count();
+			$students = Student::query()->paginate(20);
+			$studentCount = Student::query()->count();
 
 			// Store the previous URL in the session
-      		// session(['previousUrl' => url()->previous()]);
+      // session(['previousUrl' => url()->previous()]);
 
 			return Inertia::render('School/StudentList', [
 				'success' => session('success'),
