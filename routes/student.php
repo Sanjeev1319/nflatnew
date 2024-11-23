@@ -27,7 +27,7 @@ Route::middleware('auth:student')->prefix('take-a-test')->name('student.')->grou
 
 	Route::get('logout', [StudentLoginController::class, 'destroy'])->name('logout');
 
-	Route::get('student-instructions', [StudentController::class, 'studentInstruction'])->name('instructions');
+	Route::get('instructions', [StudentController::class, 'studentInstruction'])->name('instructions');
 
 
 });
