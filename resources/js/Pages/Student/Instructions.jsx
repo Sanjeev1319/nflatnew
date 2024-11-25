@@ -4,7 +4,7 @@ import PrimaryButton from "@/Components/PrimaryButton";
 import ExamScreenLayout from "@/Layouts/ExamScreenLayout";
 import { Head, useForm } from "@inertiajs/react";
 
-export default function Instructions({ studentData }) {
+export default function Instructions({ studentData, allowAttempt }) {
 	const { data, setData, post, processing, errors, reset } = useForm({
 		terms: false,
 	});
@@ -16,11 +16,17 @@ export default function Instructions({ studentData }) {
 	};
 
 	return (
-		<ExamScreenLayout>
+		<ExamScreenLayout
+			pageScreen={
+				<h2 className="text-xl font-semibold leading-tight text-gray-800">
+					NFLAT Exam Instructions
+				</h2>
+			}
+		>
 			<Head title="Instructions" />
 
 			<div className="py-8">
-				<div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
+				<div className="mx-auto sm:px-6 lg:px-8">
 					<div className="grid lg:grid-cols-7 grid-cols-1 gap-4">
 						{/* <pre>{JSON.stringify(data, undefined, 2)}</pre> */}
 						<div className="col-span-4">
@@ -83,7 +89,7 @@ export default function Instructions({ studentData }) {
 				</div>
 			</div>
 			<div className="pb-8">
-				<div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
+				<div className="mx-auto sm:px-6 lg:px-8">
 					<div className="overflow-hidden bg-white shadow-sm sm:rounded-lg">
 						<div className="p-6 text-gray-900">
 							<form onSubmit={submit}>
@@ -113,9 +119,13 @@ export default function Instructions({ studentData }) {
 								</div>
 
 								<div className="text-center">
-									<PrimaryButton type="submit" className="mt-3">
-										Start Exam
-									</PrimaryButton>
+									{allowAttempt === true ? (
+										<PrimaryButton type="submit" className="mt-3">
+											Start Exam
+										</PrimaryButton>
+									) : (
+										<div>You have already attempted the test.</div>
+									)}
 								</div>
 							</form>
 						</div>
@@ -123,7 +133,7 @@ export default function Instructions({ studentData }) {
 				</div>
 			</div>
 			<div className="pb-8">
-				<div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
+				<div className="mx-auto sm:px-6 lg:px-8">
 					<div className="overflow-hidden bg-white shadow-sm sm:rounded-lg"></div>
 				</div>
 			</div>

@@ -5,7 +5,7 @@ import ResponsiveNavLink from "@/Components/ResponsiveNavLink";
 import { Link, usePage } from "@inertiajs/react";
 import { useState } from "react";
 
-export default function ExamScreenLayout({ header, children }) {
+export default function ExamScreenLayout({ header, children, pageScreen }) {
 	const user = usePage().props.auth.user;
 
 	const [showingNavigationDropdown, setShowingNavigationDropdown] =
@@ -14,7 +14,7 @@ export default function ExamScreenLayout({ header, children }) {
 	return (
 		<div className="min-h-screen bg-gray-100">
 			<nav className="border-b border-gray-100 bg-white">
-				<div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+				<div className="mx-auto px-4 sm:px-6 lg:px-8">
 					<div className="flex h-16 justify-between">
 						<div className="flex w-full">
 							<div className="flex shrink-0 items-center">
@@ -24,9 +24,7 @@ export default function ExamScreenLayout({ header, children }) {
 							</div>
 
 							<div className="sm:-my-px sm:ms-10 flex mx-auto w-full items-center justify-center">
-								<h2 className="text-xl font-semibold leading-tight text-gray-800">
-									NFLAT Exam Instructions
-								</h2>
+								{pageScreen}
 							</div>
 
 							{/* <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">

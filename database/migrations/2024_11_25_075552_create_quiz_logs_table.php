@@ -13,14 +13,14 @@ return new class extends Migration
     {
         Schema::create('quiz_logs', function (Blueprint $table) {
             $table->id();
-                $table->string('student_uuid');
-                $table->dateTime('exam_start');
-                $table->dateTime('exam_end')->nullable();
-                $table->integer('attempt');
-                $table->timestamps();
+						$table->string('student_uuid');
+						$table->dateTime('exam_start');
+						$table->dateTime('exam_end')->nullable();
+						$table->integer('attempt');
+						$table->timestamps();
 
 
-				$table->foreign('student_uuid')->references('students_id')->on('students')->onDelete('cascade');
+				$table->foreign('student_uuid')->references('student_uuid')->on('students')->onDelete('cascade');
         });
     }
 

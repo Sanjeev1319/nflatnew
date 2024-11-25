@@ -33,6 +33,5 @@ Route::middleware('auth:student')->prefix('take-a-test')->name('student.')->grou
 
 	Route::post('start', [StudentController::class, 'startExamStore'])->name('startExam');
 
-
 });
 

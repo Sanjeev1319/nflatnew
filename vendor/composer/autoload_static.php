@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit44fda9102f94816fee0a4c366aa9a659
+class ComposerStaticInit2a1766763ff5df9fdb51712ab0871f8f
 {
     public static $files = array (
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
@@ -590,11 +590,16 @@ class ComposerStaticInit44fda9102f94816fee0a4c366aa9a659
         'App\\Http\\Controllers\\School\\SchoolDashboardController' => __DIR__ . '/../..' . '/app/Http/Controllers/School/SchoolDashboardController.php',
         'App\\Http\\Controllers\\School\\SchoolLoginController' => __DIR__ . '/../..' . '/app/Http/Controllers/School/SchoolLoginController.php',
         'App\\Http\\Controllers\\School\\SchoolRegisterController' => __DIR__ . '/../..' . '/app/Http/Controllers/School/SchoolRegisterController.php',
+        'App\\Http\\Controllers\\Student\\StudentController' => __DIR__ . '/../..' . '/app/Http/Controllers/Student/StudentController.php',
+        'App\\Http\\Controllers\\Student\\StudentLoginController' => __DIR__ . '/../..' . '/app/Http/Controllers/Student/StudentLoginController.php',
         'App\\Http\\Middleware\\HandleInertiaRequests' => __DIR__ . '/../..' . '/app/Http/Middleware/HandleInertiaRequests.php',
         'App\\Http\\Requests\\Auth\\LoginRequest' => __DIR__ . '/../..' . '/app/Http/Requests/Auth/LoginRequest.php',
         'App\\Http\\Requests\\Auth\\SchoolLoginRequest' => __DIR__ . '/../..' . '/app/Http/Requests/Auth/SchoolLoginRequest.php',
+        'App\\Http\\Requests\\Auth\\StudentLoginRequest' => __DIR__ . '/../..' . '/app/Http/Requests/Auth/StudentLoginRequest.php',
         'App\\Http\\Requests\\ProfileUpdateRequest' => __DIR__ . '/../..' . '/app/Http/Requests/ProfileUpdateRequest.php',
+        'App\\Http\\Resources\\SchoolResource' => __DIR__ . '/../..' . '/app/Http/Resources/SchoolResource.php',
         'App\\Http\\Resources\\StudentListResource' => __DIR__ . '/../..' . '/app/Http/Resources/StudentListResource.php',
+        'App\\Http\\Resources\\StudentResource' => __DIR__ . '/../..' . '/app/Http/Resources/StudentResource.php',
         'App\\Imports\\StudentsImport' => __DIR__ . '/../..' . '/app/Imports/StudentsImport.php',
         'App\\Mail\\SchoolRegistrationMail' => __DIR__ . '/../..' . '/app/Mail/SchoolRegistrationMail.php',
         'App\\Models\\Pincode' => __DIR__ . '/../..' . '/app/Models/Pincode.php',
@@ -7588,10 +7593,10 @@ class ComposerStaticInit44fda9102f94816fee0a4c366aa9a659
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit44fda9102f94816fee0a4c366aa9a659::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit44fda9102f94816fee0a4c366aa9a659::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit44fda9102f94816fee0a4c366aa9a659::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInit44fda9102f94816fee0a4c366aa9a659::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit2a1766763ff5df9fdb51712ab0871f8f::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit2a1766763ff5df9fdb51712ab0871f8f::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit2a1766763ff5df9fdb51712ab0871f8f::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInit2a1766763ff5df9fdb51712ab0871f8f::$classMap;
 
         }, null, ClassLoader::class);
     }
