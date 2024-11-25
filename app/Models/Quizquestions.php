@@ -2,11 +2,18 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
 
 class Quizquestions extends Model
 {
-  public function quizbank(){
+
+	/** @use HasFactory<\Database\Factories\UserFactory> */
+	use HasFactory, Notifiable;
+
+	public function quizbank()
+	{
 		return $this->belongsTo(Quizbank::class);
 	}
 }

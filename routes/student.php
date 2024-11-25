@@ -5,22 +5,22 @@ use App\Http\Controllers\Student\StudentLoginController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest:student')->name('student.')->group(function () {
-    Route::get('take-a-test', [StudentLoginController::class, 'create'])
-        ->name('login');
+	Route::get('take-a-test', [StudentLoginController::class, 'create'])
+		->name('login');
 
-    Route::post('take-a-test', [StudentLoginController::class, 'store']);
+	Route::post('take-a-test', [StudentLoginController::class, 'store']);
 
-    // Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])
-    //     ->name('password.request');
+	// Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])
+	//     ->name('password.request');
 
-    // Route::post('forgot-password', [PasswordResetLinkController::class, 'store'])
-    //     ->name('password.email');
+	// Route::post('forgot-password', [PasswordResetLinkController::class, 'store'])
+	//     ->name('password.email');
 
-    // Route::get('reset-password/{token}', [NewPasswordController::class, 'create'])
-    //     ->name('password.reset');
+	// Route::get('reset-password/{token}', [NewPasswordController::class, 'create'])
+	//     ->name('password.reset');
 
-    // Route::post('reset-password', [NewPasswordController::class, 'store'])
-    //     ->name('password.store');
+	// Route::post('reset-password', [NewPasswordController::class, 'store'])
+	//     ->name('password.store');
 });
 
 Route::middleware('auth:student')->prefix('take-a-test')->name('student.')->group(function () {
@@ -29,9 +29,12 @@ Route::middleware('auth:student')->prefix('take-a-test')->name('student.')->grou
 
 	Route::get('instructions', [StudentController::class, 'studentInstruction'])->name('instructions');
 
-	Route::get('start', [StudentController::class, 'startExam'])->name('startExam');
-
 	Route::post('start', [StudentController::class, 'startExamStore'])->name('startExam');
 
-});
+	Route::get('start', [StudentController::class, 'startExam'])->name('startExam');
 
+	// Apply the QuizTimerMiddleware only to the startExam routes
+	// Route::middleware(\App\Http\Middleware\QuizTimerMiddleware::class)->group(function () {
+	// 	Route::get('start', [StudentController::class, 'startExam'])->name('startExam');
+	// });
+});
