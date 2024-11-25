@@ -17,6 +17,7 @@ return new class extends Migration
 					$table->string('school_uuid');
 					$table->string('student_name'); // Student's name
 					$table->string('student_class'); // Class
+					$table->string('nflat_category'); // Class
 					$table->string('student_section'); // Section
 					$table->date('date_of_birth'); // Date of birth
 					$table->enum('gender', ['Male', 'Female', 'Other']); // Gender
@@ -24,7 +25,6 @@ return new class extends Migration
 					$table->string('parent_email_id')->nullable(); // Parent's email ID
 					$table->string('parent_mobile_number')->nullable(); // Parent's mobile number
 					$table->string('password'); // Password for student login
-					$table->integer('attempts')->nullable(); // attempted to start the exam
 					$table->integer('allowed_attempts')->nullable(); // if null will check from general settings else check from here
 					$table->datetime('last_login')->nullable(); // Date of birth
 					$table->timestamps();

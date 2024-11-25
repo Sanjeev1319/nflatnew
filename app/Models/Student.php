@@ -23,13 +23,13 @@ class Student extends Authenticatable
 				'gender',
 				'student_name',
 				'student_class',
+				'nflat_category',
 				'student_section',
 				'date_of_birth',
 				'parent_name',
 				'parent_email_id',
 				'parent_mobile_number',
 				'password',
-				'attempts',
 				'allowed_attempts',
 				'last_login',
         'email_verified_at',
@@ -61,6 +61,6 @@ class Student extends Authenticatable
 
 		public function school()
     {
-        return $this->belongsTo(School::class);
+        return $this->belongsTo(School::class, 'school_uuid', 'school_uuid');
     }
 }

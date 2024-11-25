@@ -65,6 +65,6 @@ class School extends Authenticatable
 
 	public function student()
 	{
-			return $this->hasMany(Student::class);
+			return $this->hasMany(Student::class, 'school_uuid', 'school_uuid');
 	}
 }

@@ -29,6 +29,10 @@ Route::middleware('auth:student')->prefix('take-a-test')->name('student.')->grou
 
 	Route::get('instructions', [StudentController::class, 'studentInstruction'])->name('instructions');
 
+	Route::get('start', [StudentController::class, 'startExam'])->name('startExam');
+
+	Route::post('start', [StudentController::class, 'startExamStore'])->name('startExam');
+
 
 });
 
