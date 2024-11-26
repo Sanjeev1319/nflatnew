@@ -80,10 +80,12 @@ class StudentController extends Controller
 
 		// Select 10 random questions from each category
 		$categories = ['Banking', 'Insurance', 'Investment', 'Pension'];
-		$questions = ["categories"];
+		$questions = [
+			'categories' => []
+		];
 
 		foreach ($categories as $category) {
-			$questions[] = [
+			$questions['categories'][] = [
 				'category_name' => $category,
 				'questions' => Quizquestions::where('category', $category)
 					->inRandomOrder()
@@ -116,8 +118,11 @@ class StudentController extends Controller
 			]);
 		}
 
+		$exam_time = $general_settings->where('setting', 'exam_time')->first();
+
 		Session::put('exam_start_time', now());
 		Session::put('student_uuid', $student_uuid);
+		Session::put('exam_time', $exam_time->value);
 		// Session::forget('quiz_start_time');
 
 		return redirect()->route('student.startExam');
@@ -130,8 +135,18 @@ class StudentController extends Controller
 	public function startExam()
 	{
 		$exam_session = Session::get('exam_start_time');
+		// $exam_time = Session::get('exam_time');
 		$student_uuid = Auth::guard('student')->user()->student_uuid;
 		$session_student_uuid = Session::get('student_uuid');
+
+
+		$exam_time = Session::get('exam_time');; // 30 minutes in seconds
+    $quizStartTime = Carbon::parse(Session::get('exam_start_time'));
+
+    $timeElapsed = now()->diffInMinutes($quizStartTime);
+    $timeLeft = max($exam_time - $timeElapsed, 0);
+
+    $minutes = $timeLeft % 60;
 
 		// queries
 		$setting_query = DB::table('general_settings')->get();
@@ -150,12 +165,12 @@ class StudentController extends Controller
 
 		$exam_time = $setting_query->where('setting', 'exam_time')->first();
 
-
 		// get questions from the database and the path of the questions json
 		$questions = $quiz_log_query->questions;
 
 		return Inertia::render('Student/Exam', [
 			'questions' => json_decode($questions),
+			'timeLeft' => $minutes,
 		]);
 	}
 }

@@ -33,6 +33,9 @@ Route::middleware('auth:student')->prefix('take-a-test')->name('student.')->grou
 
 	Route::get('start', [StudentController::class, 'startExam'])->name('startExam');
 
+	// Route::post('quizSubmit', [QuizController::class, 'submit'])->name('quiz.submit');
+
+
 	// Apply the QuizTimerMiddleware only to the startExam routes
 	// Route::middleware(\App\Http\Middleware\QuizTimerMiddleware::class)->group(function () {
 	// 	Route::get('start', [StudentController::class, 'startExam'])->name('startExam');
