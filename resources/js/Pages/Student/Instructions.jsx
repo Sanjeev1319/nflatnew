@@ -4,7 +4,7 @@ import PrimaryButton from "@/Components/PrimaryButton";
 import ExamScreenLayout from "@/Layouts/ExamScreenLayout";
 import { Head, useForm } from "@inertiajs/react";
 
-export default function Instructions({ studentData, allowAttempt }) {
+export default function Instructions({ studentData, allowAttempt, error }) {
 	const { data, setData, post, processing, errors, reset } = useForm({
 		terms: false,
 	});
@@ -24,6 +24,27 @@ export default function Instructions({ studentData, allowAttempt }) {
 			}
 		>
 			<Head title="Instructions" />
+			{error && (
+				<div className="pt-12">
+					<div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
+						<div className="overflow-hidden shadow-sm sm:rounded-lg">
+							<div class="bg-indigo-900 text-center py-4 lg:px-4">
+								<div
+									class="p-2 bg-indigo-800 items-center text-indigo-100 leading-none lg:rounded-full flex lg:inline-flex"
+									role="alert"
+								>
+									<span class="flex rounded-full bg-indigo-500 uppercase px-2 py-1 text-xs font-bold mr-3">
+										New
+									</span>
+									<span class="font-semibold mr-2 text-left flex-auto">
+										{error}
+									</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			)}
 
 			<div className="py-8">
 				<div className="mx-auto sm:px-6 lg:px-8">

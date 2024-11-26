@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Student;
 
 use App\Http\Resources\StudentResource;
 use App\Imports\StudentsImport;
+use App\Models\Quizquestions;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\StudentListResource;
@@ -12,6 +13,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Maatwebsite\Excel\Facades\Excel;  // Make sure you import the Excel facade correctly
@@ -47,7 +49,7 @@ class StudentController extends Controller
 
 		// dd($students);
 		return Inertia::render('Student/Instructions', [
-			'success' => session('success'),
+			'error' => session('error'),
 			'studentData' => new StudentResource($student_details),
 			'route' => session('route'),
 			'allowAttempt' => $allowAttempt,
@@ -76,6 +78,25 @@ class StudentController extends Controller
 		// quiz logs
 		$quiz_log = DB::table('quiz_logs')->where('student_uuid', $student_uuid)->first();
 
+		// Select 10 random questions from each category
+		$categories = ['Banking', 'Insurance', 'Investment', 'Pension'];
+		$questions = ["categories"];
+
+		foreach ($categories as $category) {
+			$questions[] = [
+				'category_name' => $category,
+				'questions' => Quizquestions::where('category', $category)
+					->inRandomOrder()
+					->limit(10)
+					->get()
+					->toArray()
+			];
+		}
+
+		// Save questions in JSON format
+		$jsonFile = "quiz_sessions/{$student_uuid}_questions.json";
+		Storage::put($jsonFile, json_encode($questions));
+
 		if ($quiz_log) {
 			// If record exists, increment the attempt value
 			DB::table('quiz_logs')
@@ -83,31 +104,58 @@ class StudentController extends Controller
 				->update([
 					'attempt' => $quiz_log->attempt + 1,
 					'exam_start' => $examStartTime, // Optional: Update exam start time
+					'questions' => json_encode($questions),
 				]);
 		} else {
 			// If no record exists, create a new one with attempt = 1
 			DB::table('quiz_logs')->insert([
 				'student_uuid' => $student_uuid,
 				'exam_start' => $examStartTime,
+				'questions' => json_encode($questions),
 				'attempt' => 1,
 			]);
 		}
 
-		// Session::put('quiz_start_time', now());
+		Session::put('exam_start_time', now());
+		Session::put('student_uuid', $student_uuid);
 		// Session::forget('quiz_start_time');
 
-		return redirect()->route('student.startExam', [
-			'student_uuid' => $student_uuid,
-			// 'exam_start' => session($examStartTime)
-		]);
+		return redirect()->route('student.startExam');
 	}
 
 
 	/**
 	 * Start the exam.
 	 */
-	public function startExam(Request $request, Student $student)
+	public function startExam()
 	{
-		$examTime = DB::table('general_setting');
+		$exam_session = Session::get('exam_start_time');
+		$student_uuid = Auth::guard('student')->user()->student_uuid;
+		$session_student_uuid = Session::get('student_uuid');
+
+		// queries
+		$setting_query = DB::table('general_settings')->get();
+		$quiz_log_query = DB::table('quiz_logs')->where('student_uuid', $student_uuid)->first();
+
+
+		// check if the exam session is null then redirect
+		if ($session_student_uuid == null || $exam_session == null) {
+			return redirect()->route('student.instructions')->with('error', 'Something went wrong! Try Again.');
+		}
+
+		//check if the auth student id and session student id match.
+		if ($student_uuid !== $session_student_uuid) {
+			return redirect()->route('student.instructions')->with('error', 'Something went wrong! Try Again.');
+		}
+
+		$exam_time = $setting_query->where('setting', 'exam_time')->first();
+
+
+		// get questions from the database and the path of the questions json
+		$questions = $quiz_log_query->questions;
+
+		return Inertia::render('Student/Exam', [
+			'questions' => json_decode($questions),
+		]);
 	}
 }
