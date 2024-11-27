@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\QuizController;
 use App\Http\Controllers\Student\StudentController;
 use App\Http\Controllers\Student\StudentLoginController;
 use Illuminate\Support\Facades\Route;
@@ -33,7 +34,7 @@ Route::middleware('auth:student')->prefix('take-a-test')->name('student.')->grou
 
 	Route::get('start', [StudentController::class, 'startExam'])->name('startExam');
 
-	// Route::post('quizSubmit', [QuizController::class, 'submit'])->name('quiz.submit');
+	Route::post('quizSubmit', [QuizController::class, 'quizSubmit'])->name('quiz.submit');
 
 
 	// Apply the QuizTimerMiddleware only to the startExam routes

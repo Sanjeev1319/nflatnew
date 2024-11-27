@@ -26,6 +26,11 @@ class StudentController extends Controller
 	 */
 	public function studentInstruction(Student $student)
 	{
+
+		if (Session::has('quiz_start')) {
+			return redirect()->route('student.startExam');
+		};
+
 		$allowAttempt = true;
 
 		$student_details = $student::where("student_uuid", Auth::guard('student')->user()->student_uuid)->first();
@@ -62,6 +67,7 @@ class StudentController extends Controller
 	 */
 	public function startExamStore(Request $request, Student $student)
 	{
+
 		$validate = $request->validate([
 			'terms' => 'accepted',
 		], [
@@ -123,9 +129,10 @@ class StudentController extends Controller
 		Session::put('exam_start_time', now());
 		Session::put('student_uuid', $student_uuid);
 		Session::put('exam_time', $exam_time->value);
+		Session::put('quiz_start', true);
 		// Session::forget('quiz_start_time');
 
-		return redirect()->route('student.startExam');
+		return redirect()->intended(route('student.startExam', absolute: false));
 	}
 
 
@@ -141,12 +148,12 @@ class StudentController extends Controller
 
 
 		$exam_time = Session::get('exam_time');; // 30 minutes in seconds
-    $quizStartTime = Carbon::parse(Session::get('exam_start_time'));
+		$quizStartTime = Carbon::parse(Session::get('exam_start_time'));
 
-    $timeElapsed = now()->diffInMinutes($quizStartTime);
-    $timeLeft = max($exam_time - $timeElapsed, 0);
+		$timeElapsed = now()->diffInMinutes($quizStartTime);
+		$timeLeft = max($exam_time - $timeElapsed, 0);
 
-    $minutes = $timeLeft % 60;
+		$minutes = $timeLeft % 60;
 
 		// queries
 		$setting_query = DB::table('general_settings')->get();
@@ -155,12 +162,12 @@ class StudentController extends Controller
 
 		// check if the exam session is null then redirect
 		if ($session_student_uuid == null || $exam_session == null) {
-			return redirect()->route('student.instructions')->with('error', 'Something went wrong! Try Again.');
+			return redirect()->route('student.instructions');
 		}
 
 		//check if the auth student id and session student id match.
 		if ($student_uuid !== $session_student_uuid) {
-			return redirect()->route('student.instructions')->with('error', 'Something went wrong! Try Again.');
+			return redirect()->route('student.instructions');
 		}
 
 		$exam_time = $setting_query->where('setting', 'exam_time')->first();

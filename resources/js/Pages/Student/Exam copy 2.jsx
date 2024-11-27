@@ -7,33 +7,14 @@ import { useEffect, useState } from "react";
 export default function Exam({ student_uuid, questions, timeLeft }) {
 	const [currentCategoryIndex, setCurrentCategoryIndex] = useState(0);
 	const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-	// Initialize answers from localStorage
-	const [answers, setAnswers] = useState(() => {
-		const savedAnswers = localStorage.getItem("quiz_answers");
-		return savedAnswers ? JSON.parse(savedAnswers) : {};
-	});
+	const [answers, setAnswers] = useState({});
 
-	const [remainingTime, setRemainingTime] = useState(() => {
-		// Load timer from localStorage or set to initial value
-		const storedTime = localStorage.getItem("quiz_timer");
-		return storedTime ? parseInt(storedTime, 10) : timeLeft * 60;
-	});
-
+	const [remainingTime, setRemainingTime] = useState(timeLeft * 60); // Convert minutes to seconds
 	const { post } = useForm();
 
 	const categories = questions.categories;
 	const currentCategory = categories[currentCategoryIndex];
 	const currentQuestion = currentCategory.questions[currentQuestionIndex];
-
-	// Save answers to localStorage whenever they change
-	useEffect(() => {
-		localStorage.setItem("quiz_answers", JSON.stringify(answers));
-	}, [answers]);
-
-	// Save remaining time to localStorage every second
-	useEffect(() => {
-		localStorage.setItem("quiz_timer", remainingTime.toString());
-	}, [remainingTime]);
 
 	// Disable keyboard events
 	useEffect(() => {
@@ -41,9 +22,11 @@ export default function Exam({ student_uuid, questions, timeLeft }) {
 			event.preventDefault();
 		};
 
+		// Add event listeners to block keypresses
 		window.addEventListener("keydown", disableKeyboardEvents);
 		window.addEventListener("keypress", disableKeyboardEvents);
 
+		// Cleanup event listeners on unmount
 		return () => {
 			window.removeEventListener("keydown", disableKeyboardEvents);
 			window.removeEventListener("keypress", disableKeyboardEvents);
@@ -54,11 +37,13 @@ export default function Exam({ student_uuid, questions, timeLeft }) {
 	useEffect(() => {
 		const handleBeforeUnload = (event) => {
 			event.preventDefault();
-			event.returnValue = "";
+			event.returnValue = ""; // Some browsers require this to show a confirmation dialog
 		};
 
+		// Add listener for beforeunload event
 		window.addEventListener("beforeunload", handleBeforeUnload);
 
+		// Cleanup on unmount
 		return () => {
 			window.removeEventListener("beforeunload", handleBeforeUnload);
 		};
@@ -77,6 +62,7 @@ export default function Exam({ student_uuid, questions, timeLeft }) {
 			});
 		}, 1000);
 
+		// Cleanup on component unmount
 		return () => clearInterval(timer);
 	}, []);
 
@@ -91,15 +77,16 @@ export default function Exam({ student_uuid, questions, timeLeft }) {
 
 	// Handle option selection
 	const handleOptionSelect = (questionId, optionKey) => {
-		const updatedAnswers = { ...answers, [questionId]: optionKey };
-		setAnswers(updatedAnswers);
-		localStorage.setItem("quiz_answers", JSON.stringify(updatedAnswers));
+		setAnswers((prevAnswers) => ({
+			...prevAnswers,
+			[questionId]: optionKey,
+		}));
 	};
 
 	// Handle category selection
 	const handleCategorySelect = (index) => {
 		setCurrentCategoryIndex(index);
-		setCurrentQuestionIndex(0);
+		setCurrentQuestionIndex(0); // Reset question index when switching categories
 	};
 
 	// Handle question selection
@@ -132,18 +119,12 @@ export default function Exam({ student_uuid, questions, timeLeft }) {
 	const handleSubmit = () => {
 		post(route("student.quiz.submit"), {
 			preserveScroll: true,
-			headers: {
-				"Content-Type": "application/json", // Ensure JSON content type
-				Accept: "application/json",
+			onSuccess: () => {
+				alert("Time's up! Your quiz has been submitted.");
 			},
 			data: {
 				student_uuid,
 				answers,
-			},
-			onSuccess: () => {
-				alert("Your quiz has been submitted.");
-				localStorage.removeItem("quiz_answers");
-				localStorage.removeItem("quiz_timer");
 			},
 		});
 	};
@@ -151,12 +132,19 @@ export default function Exam({ student_uuid, questions, timeLeft }) {
 	return (
 		<ExamScreenLayout>
 			<Head title="Instructions" />
-
+			{/* Timer */}
+			<div className="text-center mb-4">
+				<h2 className="text-lg font-bold">
+					Time Remaining:{" "}
+					<span className="text-red-600">{formatTime(remainingTime)}</span>
+				</h2>
+			</div>
 			<div className="grid grid-cols-1 md:grid-cols-1 gap-4 py-8 md:px-8 lg:grid-cols-12">
 				<div className="lg:col-span-8 sm:col-span-1">
 					<div className="overflow-hidden bg-white shadow-sm sm:rounded-lg">
 						<div className="p-6 text-gray-900">
 							<div className="quiz-container">
+								{/* Current Question */}
 								<div className="question-section">
 									<h3>
 										<strong>Question {currentQuestionIndex + 1}:</strong>{" "}
@@ -172,7 +160,7 @@ export default function Exam({ student_uuid, questions, timeLeft }) {
 													key={index}
 													className={`flex w-full my-3 py-4 hover:bg-green-300 focus:bg-green-500 ${
 														answers[currentQuestion.id] === key
-															? "bg-green-600 text-white"
+															? "bg-green-500"
 															: ""
 													}`}
 													onClick={() =>
@@ -186,7 +174,10 @@ export default function Exam({ student_uuid, questions, timeLeft }) {
 										)}
 									</div>
 								</div>
+
+								{/* Navigation and Submit */}
 								<div className="flex py-5">
+									{/* Previous Button */}
 									<PrimaryButton
 										onClick={handlePrevious}
 										disabled={
@@ -196,6 +187,8 @@ export default function Exam({ student_uuid, questions, timeLeft }) {
 									>
 										Previous
 									</PrimaryButton>
+
+									{/* Next Button */}
 									<PrimaryButton
 										onClick={handleNext}
 										disabled={
@@ -207,6 +200,8 @@ export default function Exam({ student_uuid, questions, timeLeft }) {
 									>
 										Next
 									</PrimaryButton>
+
+									{/* Submit Button */}
 									<PrimaryButton
 										onClick={handleSubmit}
 										className="bg-green-700 hover:bg-green-600"
@@ -218,19 +213,11 @@ export default function Exam({ student_uuid, questions, timeLeft }) {
 						</div>
 					</div>
 				</div>
+				{/* student details and category */}
 				<div className="lg:col-span-4">
 					<div className="overflow-hidden bg-white shadow-sm sm:rounded-lg">
-						<div className="p-6 text-gray-900 border-b">
-							<div className="text-center">
-								<h2 className="text-lg font-bold">
-									Time Remaining:{" "}
-									<span className="text-red-600">
-										{formatTime(remainingTime)}
-									</span>
-								</h2>
-							</div>
-						</div>
 						<div className="p-6 text-gray-900">
+							{/* Category Selection */}
 							<div className="grid grid-cols-2 pb-6 gap-4">
 								{categories.map((category, index) => (
 									<PrimaryButton
@@ -246,6 +233,7 @@ export default function Exam({ student_uuid, questions, timeLeft }) {
 							</div>
 						</div>
 						<div className="p-6 text-gray-900 border-t">
+							{/* Question Numbers */}
 							<div className="grid grid-cols-5 gap-6 ">
 								{currentCategory.questions.map((question, index) => (
 									<PrimaryButton
