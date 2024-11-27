@@ -5,36 +5,43 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\Pincode;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class PincodeController extends Controller
 {
     /**
-     * Fetch district, state, and area based on the pincode.
+     * Fetch details based on the pincode.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\JsonResponse
+     * @param string $pincode
      */
-    public function fetchDetailsByPincode(Request $request)
+    public function getPincodeDetails(Request $request)
     {
-        // Validate the pincode input
-        $validated = $request->validate([
-            'pincode' => 'required|digits:6|exists:pincodes,pincode',
-        ]);
 
-        // Retrieve data from the Pincode table
-        $pincodeData = Pincode::where('pincode', $request->input('pincode'))->first();
+			$pincode = $request->pincode;
+      $data = Pincode::where('pincode', $pincode)->get();
 
-        if ($pincodeData) {
-            // Fetch matching areas for the pincode
-            $areas = Pincode::where('pincode', $request->input('pincode'))->distinct()->pluck('area');
+			// Group the data by 'pincode', 'district', and 'state'
+			$grouped = collect($data)->groupBy(function ($item) {
+					return 'values';
+			})->map(function ($group) {
+					return [
+							'pincode' => $group->first()['pincode'],
+							'district' => $group->first()['district'],
+							'state' => $group->first()['state'],
+							'areas' => $group->pluck('area')->unique()->toArray() // Merge areas
+					];
+			});
 
-            return response()->json([
-                'district' => $pincodeData->district,
-                'statename' => $pincodeData->statename,
-                'areas' => $areas,
-            ]);
-        } else {
-            return response()->json(['message' => 'Pincode not found.'], 404);
-        }
+			// dd($grouped->values());
+
+
+			if ($grouped->isNotEmpty()) {
+				// Return the data back to the registration page
+				return Inertia::render('Auth/SchoolRegister', [
+					'pincodeDetails' => $grouped->values()->toArray(), // Send the grouped pincode data to the page
+				]);
+			}
+
+        return response()->json(['success' => false, 'message' => 'Pincode not found'], 404);
     }
 }

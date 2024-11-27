@@ -32,6 +32,35 @@ export default function Register() {
 	const [mobileVerified, setMobileVerified] = useState(false);
 	const [emailTimer, setEmailTimer] = useState(30); // 30 seconds timer for email OTP resend
 	const [mobileTimer, setMobileTimer] = useState(30); // 30 seconds timer for mobile OTP resend
+	const [pincodeLoading, setPincodeLoading] = useState(false);
+
+	// pincode
+	const fetchPincodeDetails = (pincode) => {
+		if (pincode.length === 6) {
+			post(route("getPincodeDetails", { pincode: pincode }), {
+				onSuccess: (response) => {
+					// const { district, state } = response.data;
+					setData("school_district", response.props.pincodeDetails[0].district);
+					setData("school_state", response.props.pincodeDetails[0].state);
+				},
+				onError: (errors) => {
+					setError({
+						pincode: errors.error || "Invalid pincode",
+					});
+					setData("school_district", "");
+					setData("school_state", "");
+				},
+			});
+		}
+	};
+
+	const handlePincodeChange = (e) => {
+		const value = e.target.value;
+		setData("school_pincode", value);
+		if (value.length === 6) {
+			fetchPincodeDetails(value);
+		}
+	};
 
 	// Set timer countdown
 	useEffect(() => {
@@ -229,10 +258,12 @@ export default function Register() {
 									<TextInput
 										id="school_pincode"
 										value={data.school_pincode}
-										onChange={(e) => setData("school_pincode", e.target.value)}
+										// onChange={(e) => setData("school_pincode", e.target.value)}
+										onChange={handlePincodeChange}
 										required
 										className="w-full mt-2"
 									/>
+									{pincodeLoading && <p>Loading details...</p>}
 									<InputError message={errors.school_pincode} />
 								</div>
 								<div>
@@ -356,6 +387,11 @@ export default function Register() {
 										Send OTP
 									</PrimaryButton>
 								)}
+								{mobileVerified && (
+									<span className="text-green-800 md:2/6 font-bold">
+										Mobile Verified.
+									</span>
+								)}
 								{mobileOtpSent && !mobileVerified && (
 									<>
 										<TextInput
@@ -387,7 +423,6 @@ export default function Register() {
 								)}
 								<InputError message={errors.school_mobile} />
 								<InputError message={errors.school_mobile_otp} />
-								{mobileVerified && <div>Mobile Verified.</div>}
 							</div>
 							<hr className="mb-6" />
 							{/* Incharge Details */}

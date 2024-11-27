@@ -79,9 +79,6 @@ export default function AuthenticatedLayout({ header, children }) {
 									</Dropdown.Trigger>
 
 									<Dropdown.Content>
-										<Dropdown.Link href={route("profile.edit")}>
-											Profile
-										</Dropdown.Link>
 										<Dropdown.Link
 											href={route("school.logout")}
 											method="post"
@@ -158,9 +155,6 @@ export default function AuthenticatedLayout({ header, children }) {
 						</div>
 
 						<div className="mt-3 space-y-1">
-							<ResponsiveNavLink href={route("profile.edit")}>
-								Profile
-							</ResponsiveNavLink>
 							<ResponsiveNavLink
 								method="post"
 								href={route("school.logout")}

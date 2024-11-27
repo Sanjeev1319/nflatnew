@@ -31,7 +31,7 @@ class StudentLoginController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('student.instructions', absolute: false));
+        return redirect()->intended(route('student.index'));
     }
 
     /**
@@ -45,6 +45,6 @@ class StudentLoginController extends Controller
 
         $request->session()->regenerateToken();
 
-				return redirect()->route('student.index');
+				return redirect()->route('student.login');
     }
 }
