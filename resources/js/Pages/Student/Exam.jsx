@@ -5,6 +5,11 @@ import { Head, useForm } from "@inertiajs/react";
 import { useEffect, useState } from "react";
 
 export default function Exam({ student_uuid, questions, timeLeft }) {
+	const { data, setData, post, processing, errors, reset, setError } = useForm({
+		answers: "",
+		student_uuid: student_uuid,
+	});
+
 	const [currentCategoryIndex, setCurrentCategoryIndex] = useState(0);
 	const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 	// Initialize answers from localStorage
@@ -19,8 +24,6 @@ export default function Exam({ student_uuid, questions, timeLeft }) {
 		return storedTime ? parseInt(storedTime, 10) : timeLeft * 60;
 	});
 
-	const { post } = useForm();
-
 	const categories = questions.categories;
 	const currentCategory = categories[currentCategoryIndex];
 	const currentQuestion = currentCategory.questions[currentQuestionIndex];
@@ -28,6 +31,7 @@ export default function Exam({ student_uuid, questions, timeLeft }) {
 	// Save answers to localStorage whenever they change
 	useEffect(() => {
 		localStorage.setItem("quiz_answers", JSON.stringify(answers));
+		setData("answers", answers);
 	}, [answers]);
 
 	// Save remaining time to localStorage every second
@@ -130,20 +134,20 @@ export default function Exam({ student_uuid, questions, timeLeft }) {
 
 	// Submit quiz
 	const handleSubmit = () => {
+		console.log("Submitting Data:", {
+			student_uuid: student_uuid,
+			answers: answers,
+		});
+
 		post(route("student.quiz.submit"), {
-			preserveScroll: true,
-			headers: {
-				"Content-Type": "application/json", // Ensure JSON content type
-				Accept: "application/json",
-			},
-			data: {
-				student_uuid,
-				answers,
-			},
+			data,
 			onSuccess: () => {
-				alert("Your quiz has been submitted.");
+				console.log("Submission Successful!");
 				localStorage.removeItem("quiz_answers");
 				localStorage.removeItem("quiz_timer");
+			},
+			onError: (error) => {
+				console.error("Submission Error:", error);
 			},
 		});
 	};
@@ -156,7 +160,7 @@ export default function Exam({ student_uuid, questions, timeLeft }) {
 				<div className="lg:col-span-8 sm:col-span-1">
 					<div className="overflow-hidden bg-white shadow-sm sm:rounded-lg">
 						<div className="p-6 text-gray-900">
-							<div className="quiz-container">
+							<form className="quiz-container">
 								<div className="question-section">
 									<h3>
 										<strong>Question {currentQuestionIndex + 1}:</strong>{" "}
@@ -172,7 +176,7 @@ export default function Exam({ student_uuid, questions, timeLeft }) {
 													key={index}
 													className={`flex w-full my-3 py-4 hover:bg-green-300 focus:bg-green-500 ${
 														answers[currentQuestion.id] === key
-															? "bg-green-600 text-white"
+															? " bg-green-400 text-green-950 "
 															: ""
 													}`}
 													onClick={() =>
@@ -214,7 +218,7 @@ export default function Exam({ student_uuid, questions, timeLeft }) {
 										Submit
 									</PrimaryButton>
 								</div>
-							</div>
+							</form>
 						</div>
 					</div>
 				</div>

@@ -27,6 +27,8 @@ class StudentController extends Controller
 	public function studentInstruction(Student $student)
 	{
 
+		$exam_complete = null;
+
 		if (Session::has('quiz_start')) {
 			return redirect()->route('student.startExam');
 		};
@@ -52,12 +54,18 @@ class StudentController extends Controller
 			}
 		}
 
+
+		if($quiz_logs->exam_end != null) {
+			$exam_complete = 'yes';
+		}
+
 		// dd($students);
-		return Inertia::render('Student/Instructions', [
+		return Inertia::render('Student/Index', [
 			'error' => session('error'),
 			'studentData' => new StudentResource($student_details),
 			'route' => session('route'),
 			'allowAttempt' => $allowAttempt,
+			'examComplete' => $exam_complete
 		]);
 	}
 
@@ -162,12 +170,12 @@ class StudentController extends Controller
 
 		// check if the exam session is null then redirect
 		if ($session_student_uuid == null || $exam_session == null) {
-			return redirect()->route('student.instructions');
+			return redirect()->route('student.index');
 		}
 
 		//check if the auth student id and session student id match.
 		if ($student_uuid !== $session_student_uuid) {
-			return redirect()->route('student.instructions');
+			return redirect()->route('student.index');
 		}
 
 		$exam_time = $setting_query->where('setting', 'exam_time')->first();
@@ -178,6 +186,7 @@ class StudentController extends Controller
 		return Inertia::render('Student/Exam', [
 			'questions' => json_decode($questions),
 			'timeLeft' => $minutes,
+			'student_uuid' => $student_uuid
 		]);
 	}
 }

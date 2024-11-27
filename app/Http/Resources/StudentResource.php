@@ -21,6 +21,7 @@ class StudentResource extends JsonResource
 				"student_uuid" => $this->student_uuid,
 				"school_uuid" => new SchoolResource($this->school),
 				"student_name" => $this->student_name,
+				"nflat_category" => $this->nflat_category,
 				"student_class" => $this->student_class,
 				"student_section" => $this->student_section,
 				"date_of_birth" => $this->date_of_birth,

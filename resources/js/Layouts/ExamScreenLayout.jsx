@@ -23,8 +23,11 @@ export default function ExamScreenLayout({ header, children, pageScreen }) {
 								</Link>
 							</div>
 
-							<div className="sm:-my-px sm:ms-10 flex mx-auto w-full items-center justify-center">
+							<div className="sm:-my-px flex mx-auto w-full items-center justify-center">
 								{pageScreen}
+							</div>
+							<div className="sm:-my-px flex mx-auto items-center justify-end">
+								<Link href={route("student.logout")}>Exit</Link>
 							</div>
 
 							{/* <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">

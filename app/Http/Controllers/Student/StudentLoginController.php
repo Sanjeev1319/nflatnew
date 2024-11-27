@@ -45,6 +45,6 @@ class StudentLoginController extends Controller
 
         $request->session()->regenerateToken();
 
-        return redirect('take-a-test');
+				return redirect()->route('student.index');
     }
 }

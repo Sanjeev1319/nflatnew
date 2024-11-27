@@ -28,13 +28,15 @@ Route::middleware('auth:student')->prefix('take-a-test')->name('student.')->grou
 
 	Route::get('logout', [StudentLoginController::class, 'destroy'])->name('logout');
 
-	Route::get('instructions', [StudentController::class, 'studentInstruction'])->name('instructions');
+	Route::get('/', [StudentController::class, 'studentInstruction'])->name('index');
 
 	Route::post('start', [StudentController::class, 'startExamStore'])->name('startExam');
 
 	Route::get('start', [StudentController::class, 'startExam'])->name('startExam');
 
 	Route::post('quizSubmit', [QuizController::class, 'quizSubmit'])->name('quiz.submit');
+
+	Route::get('quizSubmit', [QuizController::class, 'examComplete'])->name('quiz.submit');
 
 
 	// Apply the QuizTimerMiddleware only to the startExam routes
