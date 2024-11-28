@@ -55,7 +55,7 @@ class StudentController extends Controller
 		}
 
 
-		if($quiz_logs->exam_end != null) {
+		if ($quiz_logs->exam_end != null) {
 			$exam_complete = 'yes';
 		}
 
@@ -92,29 +92,30 @@ class StudentController extends Controller
 		// quiz logs
 		$quiz_log = DB::table('quiz_logs')->where('student_uuid', $student_uuid)->first();
 
-		// Select 10 random questions from each category
-		$categories = ['Banking', 'Insurance', 'Investment', 'Pension'];
-		$questions = [
-			'categories' => []
-		];
 
-		foreach ($categories as $category) {
-			$questions['categories'][] = [
-				'category_name' => $category,
-				'questions' => Quizquestions::where('category', $category)
-					->inRandomOrder()
-					->limit(10)
-					->get()
-					->toArray()
+		if ($quiz_log->questions == null) {
+			// Select 10 random questions from each category
+			$categories = ['Banking', 'Insurance', 'Investment', 'Pension'];
+			$questions = [
+				'categories' => []
 			];
-		}
 
-		// Save questions in JSON format
-		$jsonFile = "quiz_sessions/{$student_uuid}_questions.json";
-		Storage::put($jsonFile, json_encode($questions));
+			foreach ($categories as $category) {
+				$questions['categories'][] = [
+					'category_name' => $category,
+					'questions' => Quizquestions::where('category', $category)
+						->inRandomOrder()
+						->limit(10)
+						->get()
+						->toArray()
+				];
+			}
 
-		if ($quiz_log) {
-			// If record exists, increment the attempt value
+			// Save questions in JSON format
+			$jsonFile = "quiz_sessions/{$student_uuid}_questions.json";
+			Storage::put($jsonFile, json_encode($questions));
+
+			// If question does not exists, increment the attempt value and add a question
 			DB::table('quiz_logs')
 				->where('student_uuid', $student_uuid)
 				->update([
@@ -123,13 +124,13 @@ class StudentController extends Controller
 					'questions' => json_encode($questions),
 				]);
 		} else {
-			// If no record exists, create a new one with attempt = 1
-			DB::table('quiz_logs')->insert([
-				'student_uuid' => $student_uuid,
-				'exam_start' => $examStartTime,
-				'questions' => json_encode($questions),
-				'attempt' => 1,
-			]);
+			// If question exists, increment the attempt value
+			DB::table('quiz_logs')
+				->where('student_uuid', $student_uuid)
+				->update([
+					'attempt' => $quiz_log->attempt + 1,
+					'exam_start' => $examStartTime, // Optional: Update exam start time
+				]);
 		}
 
 		$exam_time = $general_settings->where('setting', 'exam_time')->first();
@@ -154,8 +155,12 @@ class StudentController extends Controller
 		$student_uuid = Auth::guard('student')->user()->student_uuid;
 		$session_student_uuid = Session::get('student_uuid');
 
+		// if the restrating the intervally submitted exam
+		$restart_quiz_answers = null;
+		$restart_quiz_remaining_time = null;
 
-		$exam_time = Session::get('exam_time');; // 30 minutes in seconds
+
+		$exam_time = Session::get('exam_time');
 		$quizStartTime = Carbon::parse(Session::get('exam_start_time'));
 
 		$timeElapsed = now()->diffInMinutes($quizStartTime);

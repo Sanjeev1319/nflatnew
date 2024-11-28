@@ -19,10 +19,17 @@ class QuizController extends Controller
 		$student_uuid = $request->student_uuid;
 		$answers = json_encode($request->answers);
 		$exam_endtime = Carbon::now();
+		$final_submit = 2;
+
 
 		DB::table("quiz_logs")
 			->where("student_uuid", $student_uuid)
-			->update(['answers'=> $answers,'exam_end'=> $exam_endtime]);
+			->update([
+				'answers' => $answers,
+				'exam_end' => $exam_endtime,
+				'submit_type' => $final_submit,
+				'remaining_time' => null,
+			]);
 
 		Session::forget("exam_start_time");
 		Session::forget("student_uuid");
@@ -32,4 +39,20 @@ class QuizController extends Controller
 		return redirect()->route("student.index");
 	}
 
+
+	public function quizIntervalSubmit(Request $request)
+	{
+		$student_uuid = $request->student_uuid;
+		$answers = json_encode($request->answers);
+		$remaining_time = $request->remaining_time;
+		$interal_submit = 1;
+
+		DB::table("quiz_logs")
+			->where("student_uuid", $student_uuid)
+			->update([
+				'answers' => $answers,
+				'remaining_time' => $remaining_time,
+				'submit_type' => $interal_submit
+			]);
+	}
 }

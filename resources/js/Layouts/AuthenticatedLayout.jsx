@@ -170,7 +170,7 @@ export default function AuthenticatedLayout({ header, children }) {
 			{header && (
 				<header className="bg-white shadow">
 					<div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-						{/* {user && <pre>{JSON.stringify(user, null, 2)}</pre>} */}
+						{/* <pre>{user.id}</pre> */}
 						{header}
 					</div>
 				</header>

@@ -9,15 +9,14 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware(GuestSchoolMiddleware::class)->prefix('school')->name('school.')->group(function () {
 	Route::get('register', [SchoolRegisterController::class, 'create'])
-			->name('register');
+		->name('register');
 
 	Route::post('register', [SchoolRegisterController::class, 'store']);
 
 	Route::get('login', [SchoolLoginController::class, 'create'])
-			->name('login');
+		->name('login');
 
 	Route::post('login', [SchoolLoginController::class, 'store']);
-
 });
 
 Route::middleware(AuthSchoolMiddleware::class)->prefix('school')->name('school.')->group(function () {
@@ -32,6 +31,4 @@ Route::middleware(AuthSchoolMiddleware::class)->prefix('school')->name('school.'
 	Route::get('student_bulk_register', [SchoolDashboardController::class, 'studentBulkRegister'])->name('studentBulkRegister');
 
 	Route::get('student_list', [SchoolDashboardController::class, 'studentList'])->name('studentList');
-
 });
-

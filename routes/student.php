@@ -13,7 +13,6 @@ Route::middleware(GuestStudentMiddleware::class)->name('student.')->group(functi
 		->name('login');
 
 	Route::post('take-a-test/login', [StudentLoginController::class, 'store']);
-
 });
 
 Route::middleware(AuthStudentMiddleware::class)->prefix('take-a-test')->name('student.')->group(function () {
@@ -28,7 +27,7 @@ Route::middleware(AuthStudentMiddleware::class)->prefix('take-a-test')->name('st
 
 	Route::post('quizSubmit', [QuizController::class, 'quizSubmit'])->name('quiz.submit');
 
+	Route::post('quizIntervalSubmit', [QuizController::class, 'quizIntervalSubmit'])->name('quiz.intervalSubmit');
+
 	Route::get('quizSubmit', [QuizController::class, 'examComplete'])->name('quiz.submit');
-
-
 });

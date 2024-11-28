@@ -132,6 +132,44 @@ export default function Exam({ student_uuid, questions, timeLeft }) {
 		}
 	};
 
+	// Trigger submission every 5 minutes
+	useEffect(() => {
+		// Explicitly set the answers before submission
+		setData("answers", answers);
+
+		const interval = setInterval(() => {
+			console.log("Auto-submitting after 5 minutes...");
+			handleIntervalSubmit();
+		}, 1 * 60 * 1000); // 5 minutes in milliseconds
+
+		return () => clearInterval(interval); // Cleanup interval on component unmount
+	}, [answers, remainingTime]);
+
+	// Submit quiz
+	const handleIntervalSubmit = () => {
+		// Explicitly set the answers before submission
+		setData("answers", answers);
+
+		console.log("Submitting Data:", {
+			student_uuid: student_uuid,
+			answers: answers,
+			remaining_time: remainingTime,
+		});
+
+		post(route("student.quiz.intervalSubmit"), {
+			data: { ...data, answers, remaining_time }, // Ensure the latest answers are included
+			preserveState: true, // Prevent page state from resetting
+			preserveScroll: true, // Prevent page scroll position from resetting
+			onSuccess: () => {
+				console.log("Submission Successful!");
+				console.log(data);
+			},
+			onError: (error) => {
+				console.error("Submission Error:", error);
+			},
+		});
+	};
+
 	// Submit quiz
 	const handleSubmit = () => {
 		console.log("Submitting Data:", {
