@@ -4,22 +4,39 @@ import ExamScreenLayout from "@/Layouts/ExamScreenLayout";
 import { Head, useForm } from "@inertiajs/react";
 import { useEffect, useState } from "react";
 
-export default function Exam({ student_uuid, questions, timeLeft }) {
+export default function Exam({
+	student_uuid,
+	questions,
+	timeLeft,
+	retryTime,
+	retryAnswers,
+}) {
 	const { data, setData, post, processing, errors, reset, setError } = useForm({
 		answers: "",
 		student_uuid: student_uuid,
+		remaining_time: "",
 	});
 
 	const [currentCategoryIndex, setCurrentCategoryIndex] = useState(0);
 	const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-	// Initialize answers from localStorage
+
+	// Initialize answers from retryAnswers or localStorage
 	const [answers, setAnswers] = useState(() => {
+		if (retryAnswers) {
+			localStorage.setItem("quiz_answers", JSON.stringify(retryAnswers));
+			return retryAnswers;
+		}
 		const savedAnswers = localStorage.getItem("quiz_answers");
 		return savedAnswers ? JSON.parse(savedAnswers) : {};
 	});
 
+	// Initialize remaining time from retryTime or localStorage
 	const [remainingTime, setRemainingTime] = useState(() => {
-		// Load timer from localStorage or set to initial value
+		if (retryTime) {
+			const retryTimeInSeconds = retryTime * 60; // Assuming retryTime is in minutes
+			localStorage.setItem("quiz_timer", retryTimeInSeconds.toString());
+			return retryTimeInSeconds;
+		}
 		const storedTime = localStorage.getItem("quiz_timer");
 		return storedTime ? parseInt(storedTime, 10) : timeLeft * 60;
 	});
@@ -37,6 +54,7 @@ export default function Exam({ student_uuid, questions, timeLeft }) {
 	// Save remaining time to localStorage every second
 	useEffect(() => {
 		localStorage.setItem("quiz_timer", remainingTime.toString());
+		setData("remaining_time", remainingTime);
 	}, [remainingTime]);
 
 	// Disable keyboard events
@@ -138,12 +156,12 @@ export default function Exam({ student_uuid, questions, timeLeft }) {
 		setData("answers", answers);
 
 		const interval = setInterval(() => {
-			console.log("Auto-submitting after 5 minutes...");
+			console.log("Auto-submitting after 2 minutes...");
 			handleIntervalSubmit();
-		}, 1 * 60 * 1000); // 5 minutes in milliseconds
+		}, 2 * 60 * 1000); // 5 minutes in milliseconds
 
 		return () => clearInterval(interval); // Cleanup interval on component unmount
-	}, [answers, remainingTime]);
+	}, [answers]);
 
 	// Submit quiz
 	const handleIntervalSubmit = () => {
@@ -157,7 +175,7 @@ export default function Exam({ student_uuid, questions, timeLeft }) {
 		});
 
 		post(route("student.quiz.intervalSubmit"), {
-			data: { ...data, answers, remaining_time }, // Ensure the latest answers are included
+			data: { ...data, answers, remainingTime }, // Ensure the latest answers are included
 			preserveState: true, // Prevent page state from resetting
 			preserveScroll: true, // Prevent page scroll position from resetting
 			onSuccess: () => {
@@ -189,6 +207,27 @@ export default function Exam({ student_uuid, questions, timeLeft }) {
 			},
 		});
 	};
+
+	useEffect(() => {
+		const handleLogoutOnClose = async (event) => {
+			try {
+				// Optional: Prevent some refresh actions
+				event.preventDefault();
+				event.returnValue = "";
+
+				// Trigger the logout API
+				await axios.post(route("student.logout"));
+			} catch (error) {
+				console.error("Error logging out on browser close:", error);
+			}
+		};
+
+		window.addEventListener("beforeunload", handleLogoutOnClose);
+
+		return () => {
+			window.removeEventListener("beforeunload", handleLogoutOnClose);
+		};
+	}, []);
 
 	return (
 		<ExamScreenLayout>

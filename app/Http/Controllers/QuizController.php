@@ -21,6 +21,11 @@ class QuizController extends Controller
 		$exam_endtime = Carbon::now();
 		$final_submit = 2;
 
+		$quiz_log_query = DB::table("quiz_logs")->where('student_uuid', $student_uuid)->first();
+
+		if ($quiz_log_query->submit_type == $final_submit) {
+			return redirect()->route("student.index");
+		}
 
 		DB::table("quiz_logs")
 			->where("student_uuid", $student_uuid)

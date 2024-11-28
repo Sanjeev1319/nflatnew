@@ -14,7 +14,7 @@ return new class extends Migration
 		Schema::create('quiz_logs', function (Blueprint $table) {
 			$table->id();
 			$table->string('student_uuid');
-			$table->dateTime('exam_start');
+			$table->dateTime('exam_start')->nullable();
 			$table->dateTime('exam_end')->nullable();
 			$table->integer('attempt')->nullable();
 			$table->timestamps();

@@ -150,15 +150,14 @@ class StudentController extends Controller
 	 */
 	public function startExam()
 	{
+
+		$retryTime = null;
+		$retryAnswers = null;
+
 		$exam_session = Session::get('exam_start_time');
 		// $exam_time = Session::get('exam_time');
 		$student_uuid = Auth::guard('student')->user()->student_uuid;
 		$session_student_uuid = Session::get('student_uuid');
-
-		// if the restrating the intervally submitted exam
-		$restart_quiz_answers = null;
-		$restart_quiz_remaining_time = null;
-
 
 		$exam_time = Session::get('exam_time');
 		$quizStartTime = Carbon::parse(Session::get('exam_start_time'));
@@ -172,6 +171,10 @@ class StudentController extends Controller
 		$setting_query = DB::table('general_settings')->get();
 		$quiz_log_query = DB::table('quiz_logs')->where('student_uuid', $student_uuid)->first();
 
+		if($quiz_log_query->submit_type == '1') {
+			$timeLeft = $quiz_log_query->submit_type;
+			$minutes = $timeLeft % 60;
+		}
 
 		// check if the exam session is null then redirect
 		if ($session_student_uuid == null || $exam_session == null) {
@@ -183,15 +186,15 @@ class StudentController extends Controller
 			return redirect()->route('student.index');
 		}
 
-		$exam_time = $setting_query->where('setting', 'exam_time')->first();
-
 		// get questions from the database and the path of the questions json
 		$questions = $quiz_log_query->questions;
 
 		return Inertia::render('Student/Exam', [
 			'questions' => json_decode($questions),
 			'timeLeft' => $minutes,
-			'student_uuid' => $student_uuid
+			'student_uuid' => $student_uuid,
+			'retryTime' => $retryTime,
+			'retryAnswers' => $retryAnswers,
 		]);
 	}
 }
