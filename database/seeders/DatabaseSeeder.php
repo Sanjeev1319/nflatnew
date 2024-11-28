@@ -18,8 +18,13 @@ class DatabaseSeeder extends Seeder
 		// User::factory(10)->create();
 
 		// Calling the NFLATCategorySeeder
-		// $this->call(NFLATCategorySeeder::class);
-		// $this->call(DatabaseSeeder::class);
+		$this->call(NFLATCategorySeeder::class);
+
+		// calling School Seeder
+		$this->call(SchoolSeeder::class);
+
+		// calling general Settings seeder
+		$this->call(generalSettingSeeder::class);
 
 		// User::factory()->create([
 		//     'name' => 'Test User',
