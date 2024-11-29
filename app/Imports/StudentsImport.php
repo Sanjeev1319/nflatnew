@@ -96,6 +96,7 @@ class StudentsImport implements ToCollection, WithHeadingRow
 					// Insert valid data into the database
 					Student::create([
 						'password' => $password,
+						'show_pass' => $password,
 						'nflat_category' => $nflatCategory->category,
 						'student_uuid' => $newUuid,
 						'school_uuid' => $school_uuid,

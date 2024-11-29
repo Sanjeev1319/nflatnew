@@ -5,6 +5,7 @@ use App\Http\Controllers\Student\StudentController;
 use App\Http\Controllers\Student\StudentLoginController;
 use App\Http\Middleware\AuthStudentMiddleware;
 use App\Http\Middleware\GuestStudentMiddleware;
+use App\Http\Middleware\StoreStudentUuidInSession;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(GuestStudentMiddleware::class)->name('student.')->group(function () {
@@ -12,7 +13,7 @@ Route::middleware(GuestStudentMiddleware::class)->name('student.')->group(functi
 	Route::get('take-a-test/login', [StudentLoginController::class, 'create'])
 		->name('login');
 
-	Route::post('take-a-test/login', [StudentLoginController::class, 'store']);
+	Route::post('take-a-test/login', [StudentLoginController::class, 'store'])->middleware(StoreStudentUuidInSession::class);
 });
 
 Route::middleware(AuthStudentMiddleware::class)->prefix('take-a-test')->name('student.')->group(function () {

@@ -43,18 +43,17 @@ class StudentLoginRequest extends FormRequest
 	public function authenticate(): void
 	{
 
-		// dd($this->input());
-
 		$this->ensureIsNotRateLimited();
 
-		$student = Student::where('student_uuid', $this->input('student_uuid'))->first();
-		if (!$student || $this->input('password') !== $student->password) {
+		if (!Auth::guard('student')->attempt($this->only('student_uuid', 'password'))) {
 			RateLimiter::hit($this->throttleKey());
 
 			throw ValidationException::withMessages([
 				'student_uuid' => trans('auth.failed'),
 			]);
 		}
+
+		$student = Student::where('student_uuid', $this->input('student_uuid'))->first();
 
 		$student->update([
 			'last_login' => Carbon::now()
@@ -68,8 +67,12 @@ class StudentLoginRequest extends FormRequest
 			]);
 		}
 
+		session(['user_id' => $student->student_uuid]);
 		// Log the student in
 		Auth::guard('student')->login($student);
+		// Manually store the student_uuid as user_id in the session table
+    session(['user_id' => $student->student_uuid]);
+
 
 		RateLimiter::clear($this->throttleKey());
 	}
@@ -90,7 +93,7 @@ class StudentLoginRequest extends FormRequest
 		$seconds = RateLimiter::availableIn($this->throttleKey());
 
 		throw ValidationException::withMessages([
-			'school_uuid' => trans('auth.throttle', [
+			'student_uuid' => trans('auth.throttle', [
 				'seconds' => $seconds,
 				'minutes' => ceil($seconds / 60),
 			]),

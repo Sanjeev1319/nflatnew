@@ -16,6 +16,9 @@ return Application::configure(basePath: dirname(__DIR__))
 			\Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets::class,
 			\Illuminate\Session\Middleware\AuthenticateSession::class, // Add this line
 		]);
+		$middleware->alias([
+        'session' => \Illuminate\Session\Middleware\AuthenticateSession::class, // Add this line
+    ]);
 
 		//
 	})

@@ -30,6 +30,7 @@ class Student extends Authenticatable
 				'parent_email_id',
 				'parent_mobile_number',
 				'password',
+				'show_pass',
 				'allowed_attempts',
 				'last_login',
         'email_verified_at',
@@ -42,7 +43,7 @@ class Student extends Authenticatable
      * @var array<int, string>
      */
     protected $hidden = [
-        // 'password'
+        'password'
     ];
 
 		/**
@@ -55,7 +56,8 @@ class Student extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'mobile_verified_at' => 'datetime',
-						'password' => 'encrypted'
+						'password' => 'hashed',
+						'show_pass'=> 'encrypted',
         ];
     }
 
@@ -63,4 +65,16 @@ class Student extends Authenticatable
     {
         return $this->belongsTo(School::class, 'school_uuid', 'school_uuid');
     }
+
+		protected $primaryKey = 'student_uuid'; // If your primary key is custom
+
+		public function getAuthIdentifierName()
+		{
+				return 'student_uuid';
+		}
+
+		public function getAuthIdentifier()
+		{
+				return $this->student_uuid;
+		}
 }

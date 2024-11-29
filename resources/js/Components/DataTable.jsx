@@ -77,7 +77,7 @@ export default function DataTable({ tableValues, count }) {
 								<td className="px-3 py-3">
 									{student.parent_mobile_number || "N/A"}
 								</td>
-								<td className="px-3 py-3">{student.password}</td>
+								<td className="px-3 py-3">{student.show_pass}</td>
 								<td className="text-center">Edit</td>
 							</tr>
 						))}
