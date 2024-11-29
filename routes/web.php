@@ -9,13 +9,13 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('school.register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-				'success' => session('success')
-    ]);
+	return Inertia::render('Welcome', [
+		'canLogin' => Route::has('login'),
+		'canRegister' => Route::has('school.register'),
+		'laravelVersion' => Application::VERSION,
+		'phpVersion' => PHP_VERSION,
+		'success' => session('success')
+	]);
 })->name('home');
 
 // Route::get('school/dashboard', function () {
@@ -35,9 +35,9 @@ Route::post('/verify-mobile-otp', [OTPController::class, 'verifyMobileOtp'])->na
 // 1. Student bulk upload api
 // Route::post('/students/import', [SchoolDashboardController::class, 'import'])->name('studentUploadApi');
 Route::post('/upload-students', [SchoolDashboardController::class, 'import'])->name('upload-students');
-Route::post('/pincode', [PincodeController::class, 'getPincodeDetails'])->name("getPincodeDetails");
+Route::get('/fetch-pincode-details', [PincodeController::class, 'getPincodeDetails'])->name("fetch.pincode.details");
 
 
 // require __DIR__.'/auth.php';
-require __DIR__.'/school.php';
-require __DIR__.'/student.php';
+require __DIR__ . '/school.php';
+require __DIR__ . '/student.php';

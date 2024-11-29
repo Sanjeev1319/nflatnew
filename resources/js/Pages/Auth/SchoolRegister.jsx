@@ -32,33 +32,46 @@ export default function Register() {
 	const [mobileVerified, setMobileVerified] = useState(false);
 	const [emailTimer, setEmailTimer] = useState(30); // 30 seconds timer for email OTP resend
 	const [mobileTimer, setMobileTimer] = useState(30); // 30 seconds timer for mobile OTP resend
-	const [pincodeLoading, setPincodeLoading] = useState(false);
 
-	// pincode
-	const fetchPincodeDetails = (pincode) => {
+	const [areaOptions, setAreaOptions] = useState([]); // Store fetched areas
+	const [districtOptions, setDistrictOptions] = useState([]); // Store fetched areas
+	const [stateOptions, setStateOptions] = useState([]); // Store fetched areas
+	const [pincodeError, setPincodeError] = useState(""); // For pincode-related errors
+
+	const fetchPincodeDetails = async (pincode) => {
 		if (pincode.length === 6) {
-			post(route("getPincodeDetails", { pincode: pincode }), {
-				onSuccess: (response) => {
-					// const { district, state } = response.data;
-					setData("school_district", response.props.pincodeDetails[0].district);
-					setData("school_state", response.props.pincodeDetails[0].state);
-				},
-				onError: (errors) => {
-					setError({
-						pincode: errors.error || "Invalid pincode",
-					});
-					setData("school_district", "");
-					setData("school_state", "");
-				},
-			});
+			try {
+				const response = await axios.get(`/fetch-pincode-details`, {
+					params: { pincode },
+				});
+
+				setStateOptions(response.data.state);
+				setDistrictOptions(response.data.district);
+				setAreaOptions(response.data.areas);
+				setPincodeError(""); // Clear any previous errors
+			} catch (error) {
+				setPincodeError(
+					error.response?.data?.message || "Error fetching pincode details"
+				);
+				setStateOptions([]);
+				setDistrictOptions([]);
+				setAreaOptions([]);
+			}
 		}
 	};
 
 	const handlePincodeChange = (e) => {
-		const value = e.target.value;
-		setData("school_pincode", value);
-		if (value.length === 6) {
-			fetchPincodeDetails(value);
+		const pincode = e.target.value;
+		setData("school_pincode", pincode);
+
+		// Only fetch details if the pincode is 6 digits
+		if (pincode.length === 6) {
+			fetchPincodeDetails(pincode);
+		} else {
+			// Clear state, district, and area if pincode is not valid
+			setData("school_state", "");
+			setData("school_district", "");
+			setData("school_area", "");
 		}
 	};
 
@@ -197,13 +210,14 @@ export default function Register() {
 	// Final form submit
 	const submit = (e) => {
 		e.preventDefault();
+		console.log(data);
 		post(route("school.register"), data);
 	};
 
 	return (
 		<GuestLayout>
 			<Head title="Register School" />
-			<div className="lg:px-8 sm:pb-32 pt-16 sm:px-6 py-24 max-w-5xl mx-auto">
+			<div className="lg:px-8 sm:pb-32 pt-16 sm:px-6 py-24 lg:max-w-5xl sm:w-full mx-auto">
 				<form
 					onSubmit={submit}
 					// className="md:grid-cols-3 gap-y-8 gap-x-8 grid-cols-1 grid"
@@ -263,8 +277,8 @@ export default function Register() {
 										required
 										className="w-full mt-2"
 									/>
-									{pincodeLoading && <p>Loading details...</p>}
 									<InputError message={errors.school_pincode} />
+									{/* <InputError message={pincodeError || errors.school_pincode} /> */}
 								</div>
 								<div>
 									<InputLabel
@@ -273,13 +287,27 @@ export default function Register() {
 									>
 										Area
 									</InputLabel>
-									<TextInput
+									{/* <TextInput
 										id="school_area"
 										value={data.school_area}
 										onChange={(e) => setData("school_area", e.target.value)}
 										required
 										className="w-full mt-2"
-									/>
+									/> */}
+									<select
+										id="school_area"
+										value={data.school_area}
+										onChange={(e) => setData("school_area", e.target.value)}
+										required
+										className="w-full mt-2"
+									>
+										<option value="">Select Area</option>
+										{areaOptions.map((area, index) => (
+											<option key={index} value={area}>
+												{area}
+											</option>
+										))}
+									</select>
 									<InputError message={errors.school_area} />
 								</div>
 							</div>
@@ -292,13 +320,20 @@ export default function Register() {
 									>
 										District
 									</InputLabel>
-									<TextInput
+									<select
 										id="school_district"
 										value={data.school_district}
 										onChange={(e) => setData("school_district", e.target.value)}
 										required
 										className="w-full mt-2"
-									/>
+									>
+										<option value="">Select District</option>
+										{districtOptions.map((district, index) => (
+											<option key={index} value={district}>
+												{district}
+											</option>
+										))}
+									</select>
 									<InputError message={errors.school_district} />
 								</div>
 								<div>
@@ -308,13 +343,21 @@ export default function Register() {
 									>
 										State
 									</InputLabel>
-									<TextInput
+									<select
 										id="school_state"
 										value={data.school_state}
 										onChange={(e) => setData("school_state", e.target.value)}
 										required
 										className="w-full mt-2"
-									/>
+									>
+										<option value="">Select State</option>
+										{stateOptions.map((state, index) => (
+											<option key={index} value={state}>
+												{state}
+											</option>
+										))}
+									</select>
+
 									<InputError message={errors.school_state} />
 								</div>
 							</div>
