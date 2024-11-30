@@ -24,6 +24,7 @@ Route::middleware(AuthSchoolMiddleware::class)->prefix('school')->name('school.'
 	Route::post('logout', [SchoolLoginController::class, 'destroy'])->name('logout');
 
 	Route::get('dashboard', [SchoolDashboardController::class, 'index'])->name('dashboard');
+	Route::get('/', [SchoolDashboardController::class, 'index'])->name('index');
 
 	Route::get('student_register', [SchoolDashboardController::class, 'studentRegister'])->name('studentRegister');
 	Route::post('student_register', [SchoolDashboardController::class, 'studentRegisterStore']);

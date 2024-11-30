@@ -1,13 +1,14 @@
+import Checkbox from "@/Components/Checkbox";
 import InputError from "@/Components/InputError";
 import InputLabel from "@/Components/InputLabel";
 import PrimaryButton from "@/Components/PrimaryButton";
 import TextInput from "@/Components/TextInput";
-import LoginLayout from "@/Layouts/LoginLayout";
+import GuestLayout from "@/Layouts/GuestLayout";
 import { Head, Link, useForm } from "@inertiajs/react";
 
 export default function Login({ status, canResetPassword }) {
 	const { data, setData, post, processing, errors, reset } = useForm({
-		school_uuid: "",
+		student_uuid: "",
 		password: "",
 		remember: false,
 	});
@@ -15,7 +16,7 @@ export default function Login({ status, canResetPassword }) {
 	const submit = (e) => {
 		e.preventDefault();
 
-		post(route("school.login"), {
+		post(route("student.login"), {
 			onFinish: () => reset("password"),
 			onError: (errors) => {
 				console.error("Login failed:", errors);
@@ -24,7 +25,7 @@ export default function Login({ status, canResetPassword }) {
 	};
 
 	return (
-		<LoginLayout formTitle={<>School Login</>}>
+		<GuestLayout>
 			<Head title="Log in" />
 
 			{status && (
@@ -33,20 +34,20 @@ export default function Login({ status, canResetPassword }) {
 
 			<form onSubmit={submit}>
 				<div>
-					<InputLabel htmlFor="school_uuid" value="School ID" />
+					<InputLabel htmlFor="student_uuid" value="Student ID" />
 
 					<TextInput
-						id="school_uuid"
+						id="student_uuid"
 						type="text"
-						name="school_uuid"
-						value={data.school_uuid}
+						name="student_uuid"
+						value={data.student_uuid}
 						className="mt-1 block w-full"
 						autoComplete="username"
 						isFocused={true}
-						onChange={(e) => setData("school_uuid", e.target.value)}
+						onChange={(e) => setData("student_uuid", e.target.value)}
 					/>
 
-					<InputError message={errors.school_uuid} className="mt-2" />
+					<InputError message={errors.student_uuid} className="mt-2" />
 				</div>
 
 				<div className="mt-4">
@@ -65,17 +66,6 @@ export default function Login({ status, canResetPassword }) {
 					<InputError message={errors.password} className="mt-2" />
 				</div>
 
-				{/* <div className="mt-4 block">
-					<label className="flex items-center">
-						<Checkbox
-							name="remember"
-							checked={data.remember}
-							onChange={(e) => setData("remember", e.target.checked)}
-						/>
-						<span className="ms-2 text-sm text-gray-600">Remember me</span>
-					</label>
-				</div> */}
-
 				<div className="mt-4 flex items-center justify-end">
 					{canResetPassword && (
 						<Link
@@ -86,16 +76,11 @@ export default function Login({ status, canResetPassword }) {
 						</Link>
 					)}
 
-					<PrimaryButton
-						className="ms-4 mt-6"
-						disabled={processing}
-						type="submit"
-					>
+					<PrimaryButton className="ms-4" disabled={processing} type="submit">
 						Log in
 					</PrimaryButton>
 				</div>
 			</form>
-			<Link href={route("home")}>Go to Home Page</Link>
-		</LoginLayout>
+		</GuestLayout>
 	);
 }

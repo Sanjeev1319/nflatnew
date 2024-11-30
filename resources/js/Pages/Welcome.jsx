@@ -103,13 +103,28 @@ export default function Welcome({ auth, laravelVersion, phpVersion, success }) {
 										</div>
 										<ul role="list" className="w-full">
 											<li className="sm:px-6 py-3 px-4 gap-x-6 justify-between flex relative text-base border-b hover:indent-2 transition-all hover:bg-indigo-50 hover:bg-opacity-30">
-												<a href="">Examination Pattern</a>
+												<a
+													href={"/storage/docs/exam_pattern.pdf"}
+													target="_blank"
+												>
+													Examination Pattern
+												</a>
 											</li>
 											<li className="sm:px-6 py-3 px-4 gap-x-6 justify-between flex relative text-base border-b hover:indent-2 transition-all hover:bg-indigo-50 hover:bg-opacity-30">
-												<a href="">Important Dates</a>
+												<a
+													href={"/storage/docs/important_dates.pdf"}
+													target="_blank"
+												>
+													Important Dates
+												</a>
 											</li>
 											<li className="sm:px-6 py-3 px-4 gap-x-6 justify-between flex relative text-base border-b hover:indent-2 transition-all hover:bg-indigo-50 hover:bg-opacity-30">
-												<a href="">Syllabus</a>
+												<a
+													href={"/storage/docs/syllabus_latest.pdf"}
+													target="_blank"
+												>
+													Syllabus
+												</a>
 											</li>
 										</ul>
 									</div>
@@ -132,9 +147,14 @@ export default function Welcome({ auth, laravelVersion, phpVersion, success }) {
 											Important Note to the NFLAT Student
 										</h2>
 										<p className="text-lg font-normal text-gray-700 mb-4">
-											Students Please Click -
-											https://schoolexam.ncfe.org.in/take-a-test to take the
-											test (NFLAT 2024-25 examination url).
+											Students Please Click -{" "}
+											<Link
+												href={route("student.index")}
+												className="text-red-700 hover:underline"
+											>
+												https://schoolexam.ncfe.org.in/take-a-test
+											</Link>{" "}
+											to take the test (NFLAT 2024-25 examination url).
 										</p>
 										<p className="text-lg font-normal text-gray-700 mb-4">
 											1. Test username is your{" "}
@@ -148,7 +168,7 @@ export default function Welcome({ auth, laravelVersion, phpVersion, success }) {
 										</p>
 										<p className="text-lg font-normal text-red-700 mb-4">
 											Collect your Test username and Test password from your
-											school
+											school.
 										</p>
 									</div>
 									<div className="text-justify mt-4">
