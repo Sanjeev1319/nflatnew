@@ -43,37 +43,53 @@ class StudentLoginRequest extends FormRequest
 	public function authenticate(): void
 	{
 
+		// $this->ensureIsNotRateLimited();
+
+		// if (!Auth::guard('student')->attempt($this->only('student_uuid', 'password'))) {
+		// 	RateLimiter::hit($this->throttleKey());
+
+		// 	throw ValidationException::withMessages([
+		// 		'student_uuid' => trans('auth.failed'),
+		// 	]);
+		// }
+
+		// $student = Student::where('student_uuid', $this->input('student_uuid'))->first();
+
+		// $student->update([
+		// 	'last_login' => Carbon::now()
+		// ]);
+
+		// $exists = DB::table('quiz_logs')->where('student_uuid', $this->input('student_uuid'))->exists();
+
+		// if (!$exists) {
+		// 	DB::table('quiz_logs')->insert([
+		// 		'student_uuid' => $this->input('student_uuid'),
+		// 	]);
+		// }
+
+		// session(['user_id' => $student->student_uuid]);
+		// // Log the student in
+		// Auth::guard('student')->login($student);
+		// // Manually store the student_uuid as user_id in the session table
+		// session(['user_id' => $student->student_uuid]);
+
+
+		// RateLimiter::clear($this->throttleKey());
+
+		// dd($this->input());
 		$this->ensureIsNotRateLimited();
-
-		if (!Auth::guard('student')->attempt($this->only('student_uuid', 'password'))) {
+		$student = Student::where('student_uuid', $this->input('student_uuid'))->first();
+		if (!$student || $this->input('password') !== $student->password) {
 			RateLimiter::hit($this->throttleKey());
-
 			throw ValidationException::withMessages([
 				'student_uuid' => trans('auth.failed'),
 			]);
 		}
-
-		$student = Student::where('student_uuid', $this->input('student_uuid'))->first();
-
 		$student->update([
 			'last_login' => Carbon::now()
 		]);
-
-		$exists = DB::table('quiz_logs')->where('student_uuid', $this->input('student_uuid'))->exists();
-
-		if (!$exists) {
-			DB::table('quiz_logs')->insert([
-				'student_uuid' => $this->input('student_uuid'),
-			]);
-		}
-
-		session(['user_id' => $student->student_uuid]);
 		// Log the student in
 		Auth::guard('student')->login($student);
-		// Manually store the student_uuid as user_id in the session table
-    session(['user_id' => $student->student_uuid]);
-
-
 		RateLimiter::clear($this->throttleKey());
 	}
 

@@ -65,6 +65,7 @@ class StudentsImport implements ToCollection, WithHeadingRow
 			} else {
 				// Check for duplicate entry
 				$duplicate = Student::where('student_name', $row['name'])
+					->where('school_uuid', $school_uuid)
 					->where('student_class', $row['class'])
 					->where('student_section', $row['section'])
 					->where('date_of_birth', Carbon::createFromFormat('d-m-Y', $row['dob'])->format('Y-m-d'))
@@ -96,16 +97,15 @@ class StudentsImport implements ToCollection, WithHeadingRow
 					// Insert valid data into the database
 					Student::create([
 						'password' => $password,
-						'show_pass' => $password,
 						'nflat_category' => $nflatCategory->category,
 						'student_uuid' => $newUuid,
 						'school_uuid' => $school_uuid,
-						'student_name' => $row['name'],
+						'student_name' => strtoupper($row['name']),
 						'student_class' => $row['class'],
 						'student_section' => $row['section'],
 						'date_of_birth' => Carbon::createFromFormat('d-m-Y', $row['dob'])->format('Y-m-d'),
 						'gender' => $row['gender'],
-						'parent_name' => $row['parent_name'],
+						'parent_name' => strtoupper($row['parent_name']),
 						'parent_email_id' => $row['parent_email'],
 						'parent_mobile_number' => $row['parent_mobile'],
 					]);

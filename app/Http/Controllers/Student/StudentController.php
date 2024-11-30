@@ -3,21 +3,16 @@
 namespace App\Http\Controllers\Student;
 
 use App\Http\Resources\StudentResource;
-use App\Imports\StudentsImport;
 use App\Models\Quizquestions;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\StudentListResource;
 use App\Models\Student;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Validation\Rule;
 use Inertia\Inertia;
-use Maatwebsite\Excel\Facades\Excel;  // Make sure you import the Excel facade correctly
-use Illuminate\Support\Str;
 
 class StudentController extends Controller
 {
@@ -171,7 +166,7 @@ class StudentController extends Controller
 		$setting_query = DB::table('general_settings')->get();
 		$quiz_log_query = DB::table('quiz_logs')->where('student_uuid', $student_uuid)->first();
 
-		if($quiz_log_query->submit_type == '1') {
+		if ($quiz_log_query->submit_type == '1') {
 			$timeLeft = $quiz_log_query->submit_type;
 			$minutes = $timeLeft % 60;
 		}

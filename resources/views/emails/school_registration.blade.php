@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>School Registration</title>
+    <title>Successful School Registration</title>
 </head>
 <body>
-    <h1>Welcome to Our Platform</h1>
+    <h1>Welcome</h1>
     <p>Dear {{ $school_name }},</p>
     <p>Your school has been registered successfully. Use the following credentials to log in:</p>
     <p><strong>Email:</strong> {{ $school_email }}</p>

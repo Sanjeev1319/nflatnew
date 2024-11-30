@@ -29,7 +29,9 @@ Route::post('/verify-email-otp', [OTPController::class, 'verifyEmailOtp'])->name
 Route::post('/send-mobile-otp', [OTPController::class, 'sendMobileOtp'])->name('sendMobileOtp');
 Route::post('/verify-mobile-otp', [OTPController::class, 'verifyMobileOtp'])->name('verifyMobileOtp');
 
-
+Route::get('sidebar', function () {
+	return Inertia::render('Dashboard');
+});
 
 // API LIST
 // 1. Student bulk upload api

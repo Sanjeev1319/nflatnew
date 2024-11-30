@@ -5,18 +5,18 @@ import SelectInput from "@/Components/SelectInput";
 import TextInput from "@/Components/TextInput";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, useForm } from "@inertiajs/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-export default function Dashboard({ nflatCategories, success }) {
+export default function StudentEdit({ nflatCategories, student }) {
 	const { data, setData, post, processing, errors, reset, setError } = useForm({
-		name: "",
-		section: "",
-		dob: "",
-		gender: "",
-		parent_name: "",
-		parent_email: "",
-		parent_mobile: "",
-		class: "",
+		name: student.data.student_name || "",
+		section: student.data.student_section || "",
+		dob: student.data.date_of_birth || "",
+		gender: student.data.gender || "",
+		parent_name: student.data.parent_name || "",
+		parent_email: student.data.parent_email_id || "",
+		parent_mobile: student.data.parent_mobile_number || "",
+		class: student.data.student_class || "",
 	});
 
 	const [selectedCategoryName, setSelectedCategoryName] = useState("");
@@ -44,47 +44,19 @@ export default function Dashboard({ nflatCategories, success }) {
 	// Final form submit
 	const handleSubmit = (e) => {
 		e.preventDefault();
-		post(route("school.studentRegister"), data);
+		post(route("school.studentEditStore", { id: student.data.id }), data);
 	};
 
 	return (
 		<AuthenticatedLayout
 			header={
 				<h2 className="text-xl font-semibold leading-tight text-gray-800">
-					Student Registration
+					Edit Student Details
 				</h2>
 			}
 		>
 			<Head title="Dashboard" />
-
-			{success && (
-				<div className="pt-12">
-					<div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
-						<div className="overflow-hidden shadow-sm sm:rounded-lg">
-							<div class="bg-indigo-900 text-center py-4 lg:px-4">
-								<div
-									class="p-2 bg-indigo-800 items-center text-indigo-100 leading-none lg:rounded-full flex lg:inline-flex"
-									role="alert"
-								>
-									<span class="flex rounded-full bg-indigo-500 uppercase px-2 py-1 text-xs font-bold mr-3">
-										New
-									</span>
-									<span class="font-semibold mr-2 text-left flex-auto">
-										{success}
-									</span>
-									<svg
-										class="fill-current opacity-75 h-4 w-4"
-										xmlns="http://www.w3.org/2000/svg"
-										viewBox="0 0 20 20"
-									>
-										<path d="M12.95 10.707l.707-.707L8 4.343 6.586 5.757 10.828 10l-4.242 4.243L8 15.657l4.95-4.95z" />
-									</svg>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			)}
+			{/* <pre>{JSON.stringify(student.data, undefined, 2)}</pre> */}
 
 			<div className="py-12">
 				<div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
@@ -96,11 +68,12 @@ export default function Dashboard({ nflatCategories, success }) {
 								</InputLabel>
 								<TextInput
 									id="name"
-									value={data.name}
+									value={"data.name"}
 									onChange={(e) =>
 										setData("name", e.target.value.toUpperCase())
 									}
 									className="w-full mt-2"
+									defaultValue={data.name}
 								/>
 								<InputError message={errors.name} />
 							</div>
@@ -113,6 +86,7 @@ export default function Dashboard({ nflatCategories, success }) {
 									<SelectInput
 										id="class"
 										value={data.class}
+										defaultValue={data.class}
 										onChange={handleCategoryChange}
 										className="w-full mt-2"
 									>
@@ -136,6 +110,7 @@ export default function Dashboard({ nflatCategories, success }) {
 									<SelectInput
 										id="section"
 										value={data.section}
+										defaultValue={data.section}
 										onChange={(e) => setData("section", e.target.value)}
 										className="w-full mt-2"
 									>
@@ -168,6 +143,7 @@ export default function Dashboard({ nflatCategories, success }) {
 									<SelectInput
 										id="gender"
 										value={data.gender}
+										defaultValue={data.gender}
 										onChange={(e) => setData("gender", e.target.value)}
 										className="w-full mt-2"
 									>
@@ -187,6 +163,7 @@ export default function Dashboard({ nflatCategories, success }) {
 										type="date"
 										id="dob"
 										value={data.dob}
+										defaultValue={data.dob}
 										onChange={(e) => setData("dob", e.target.value)}
 										className="w-full mt-2"
 									/>
@@ -201,6 +178,7 @@ export default function Dashboard({ nflatCategories, success }) {
 								<TextInput
 									id="parent_name"
 									value={data.parent_name}
+									defaultValue={data.parent_name}
 									onChange={(e) =>
 										setData("parent_name", e.target.value.toUpperCase())
 									}
@@ -218,6 +196,7 @@ export default function Dashboard({ nflatCategories, success }) {
 										type="email"
 										id="parent_email"
 										value={data.parent_email}
+										defaultValue={data.parent_email}
 										onChange={(e) => setData("parent_email", e.target.value)}
 										className="w-full mt-2"
 									/>
@@ -231,6 +210,7 @@ export default function Dashboard({ nflatCategories, success }) {
 									<TextInput
 										id="parent_mobile"
 										value={data.parent_mobile}
+										defaultValue={data.parent_mobile}
 										onChange={(e) => setData("parent_mobile", e.target.value)}
 										className="w-full mt-2"
 									/>

@@ -13,40 +13,40 @@ use Inertia\Response;
 
 class SchoolLoginController extends Controller
 {
-    /**
-     * Display the login view.
-     */
-    public function create(): Response
-    {
-        return Inertia::render('Auth/SchoolLogin', [
-            'canResetPassword' => Route::has('password.request'),
-            'status' => session('status'),
-        ]);
-    }
+	/**
+	 * Display the login view.
+	 */
+	public function create(): Response
+	{
+		return Inertia::render('Auth/SchoolLogin', [
+			// 'canResetPassword' => Route::has('password.request'),
+			'status' => session('status'),
+		]);
+	}
 
-    /**
-     * Handle an incoming authentication request.
-     */
-    public function store(SchoolLoginRequest $request): RedirectResponse
-    {
-        $request->authenticate();
+	/**
+	 * Handle an incoming authentication request.
+	 */
+	public function store(SchoolLoginRequest $request): RedirectResponse
+	{
+		$request->authenticate();
 
-        $request->session()->regenerate();
+		$request->session()->regenerate();
 
-        return redirect()->intended(route('school.dashboard', absolute: false));
-    }
+		return redirect()->intended(route('school.dashboard', absolute: false));
+	}
 
-    /**
-     * Destroy an authenticated session.
-     */
-    public function destroy(Request $request): RedirectResponse
-    {
-        Auth::guard('school')->logout();
+	/**
+	 * Destroy an authenticated session.
+	 */
+	public function destroy(Request $request): RedirectResponse
+	{
+		Auth::guard('school')->logout();
 
-        $request->session()->invalidate();
+		$request->session()->invalidate();
 
-        $request->session()->regenerateToken();
+		$request->session()->regenerateToken();
 
-        return redirect('school/login');
-    }
+		return redirect('school/login');
+	}
 }

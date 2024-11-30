@@ -1,3 +1,7 @@
+import {
+	ArrowLongLeftIcon,
+	ArrowLongRightIcon,
+} from "@heroicons/react/24/solid";
 import { Link, usePage } from "@inertiajs/react";
 import { useEffect, useState } from "react";
 
@@ -24,29 +28,61 @@ export default function Pagination({ links, count }) {
 
 	return (
 		<>
-			<nav className="text-center mt-4">
-				{links.map((link) => (
-					<Link
-						preserveScroll
-						href={link.url || ""}
-						key={link.label}
-						className={
-							"inner-block py-2 px-3 rounded-lg text-xs mx-1 " +
-							(link.active ? "bg-lime-400 text-black font-bold " : " ") +
-							(!link.url
-								? "!text-gray-500 cursor-not-allowed "
-								: " hover:bg-lime-400 hover:text-black hover:font-bold ")
-						}
-						dangerouslySetInnerHTML={{ __html: link.label }}
-					></Link>
-				))}
-				{/* <pre>{JSON.stringify(links, undefined, 2)}</pre> */}
-			</nav>
-			<div>
-				<p>
-					Showing items {startIndex} to {endIndex} out of {totalItems}
-				</p>
-				{/* Render your list of students here */}
+			<div className="pt-8 pb-8 mx-auto">
+				<nav className="sm:px-0 px-4 border-gray-200 border-t justify-between items-center flex">
+					<div className="flex-1 w-0 flex -mt-px ">
+						{links[0].url ? (
+							<Link
+								preserveScroll
+								href={links[0].url}
+								className="hover:text-[#374151] hover:border-[#d1d5db] text-[#6b7280] font-medium leading-5 pt-4 pl-1 border-transparent border-t-2 items-center inline-flex"
+							>
+								<ArrowLongLeftIcon className="h-5 pe-2" /> Previous
+							</Link>
+						) : (
+							<div className="!text-gray-500 cursor-not-allowed leading-5 pt-4 flex">
+								<ArrowLongLeftIcon className="h-5 pe-2" /> Previous
+							</div>
+						)}
+					</div>
+					<div class="md:flex md:mt-[-1px] hidden">
+						{links.slice(1, links.length - 1).map((link) => (
+							<Link
+								preserveScroll
+								href={link.url || ""}
+								key={link.label}
+								className={
+									"font-medium leading-5 pt-4 border-transparent border-t-2 items-center inline-flex px-4 " +
+									(link.active
+										? " text-indigo-700 font-semibold border-indigo-700 "
+										: " text-[#6b7280] ") +
+									(!link.url
+										? "!text-gray-500 cursor-not-allowed "
+										: " hover:text-[#374151] hover:border-[#d1d5db]  ")
+								}
+								dangerouslySetInnerHTML={{ __html: link.label }}
+							></Link>
+						))}
+					</div>
+
+					<div className="justify-end flex-1 w-0 flex mt-[-1px]">
+						{links[links.length - 1].url ? (
+							<Link
+								preserveScroll
+								href={links[links.length - 1].url}
+								className="hover:text-[#374151] hover:border-[#d1d5db] text-[#6b7280] font-medium leading-5 pt-4 pr-1 border-transparent border-t-2 items-center inline-flex"
+							>
+								Next <ArrowLongRightIcon className="h-5 ps-2" />
+							</Link>
+						) : (
+							<div className="!text-gray-500 cursor-not-allowed leading-5 pt-4 flex">
+								Next <ArrowLongRightIcon className="h-5 ps-2" />
+							</div>
+						)}
+					</div>
+					{/* {links.length} */}
+					{/* <pre>{JSON.stringify(links, undefined, 2)}</pre> */}
+				</nav>
 			</div>
 		</>
 	);

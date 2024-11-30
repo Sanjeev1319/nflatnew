@@ -56,19 +56,32 @@ export default function StudentBulkRegister({
 				<div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
 					<div className="overflow-hidden bg-white shadow-sm sm:rounded-lg">
 						<div className="p-6 text-gray-900">
-							<h3>Upload Student Details</h3>
-							<form onSubmit={handleSubmit}>
-								{/* File Input */}
-								<TextInput
-									type="file"
-									name="file"
-									onChange={handleFileChange}
-									accept=".xlsx, .csv"
-								/>
-								<PrimaryButton type="submit">Upload</PrimaryButton>
-							</form>
+							{import_errors && import_errors.length > 0 ? (
+								<>
+									<Link
+										href={route("school.studentBulkRegister")}
+										className="inline-flex items-center rounded-md border border-transparent bg-gray-800 px-4 py-2 text-xs font-semibold uppercase tracking-widest text-white transition duration-150 ease-in-out hover:bg-gray-700 focus:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 active:bg-gray-900 text-center"
+									>
+										Reupload
+									</Link>
+								</>
+							) : (
+								<form onSubmit={handleSubmit}>
+									{/* File Input */}
+									<input
+										class="m-0 min-w-0 cursor-pointer rounded-md border border-solid border-secondary-500 bg-transparent bg-clip-padding px-3 py-[0.32rem] text-base font-normal text-surface transition duration-300 ease-in-out file:-mx-3 file:-my-[0.32rem] file:me-3 file:bg-indigo-900 file:text-white file:cursor-pointer file:overflow-hidden file:border-0 file:border-e file:border-solid file:border-inherit file:bg-transparent file:px-3  file:py-[0.32rem] file:text-surface focus:border-primary focus:text-gray-700 focus:shadow-inset focus:outline-none dark:border-white/70 dark:text-white  file:dark:text-white"
+										type="file"
+										name="file"
+										onChange={handleFileChange}
+										accept=".xlsx, .csv"
+									/>
+									<PrimaryButton type="submit" className="mx-4">
+										Upload
+									</PrimaryButton>
+								</form>
+							)}
 
-							<div>
+							<div className="mt-4">
 								<a
 									href="/storage/samples/student_bulk_register.xlsx"
 									download
@@ -79,91 +92,6 @@ export default function StudentBulkRegister({
 							</div>
 
 							{/* Message Display */}
-							{message && <p className="text-red-500">{message}</p>}
-							{/* Validation Errors */}
-							{/* {import_errors && import_errors.length > 0 && (
-								<div className="mt-6">
-									<h4 className="text-red-500 font-bold">
-										Errors in Uploaded File:
-									</h4>
-									<table className="min-w-full border-collapse border border-gray-200">
-										<thead>
-											<tr>
-												<th className="border border-gray-300 px-4 py-2">
-													Row
-												</th>
-												<th className="border border-gray-300 px-4 py-2">
-													Name
-												</th>
-												<th className="border border-gray-300 px-4 py-2">
-													Class
-												</th>
-												<th className="border border-gray-300 px-4 py-2">
-													Section
-												</th>
-												<th className="border border-gray-300 px-4 py-2">
-													DOB
-												</th>
-												<th className="border border-gray-300 px-4 py-2">
-													Gender
-												</th>
-												<th className="border border-gray-300 px-4 py-2">
-													Parent Name
-												</th>
-												<th className="border border-gray-300 px-4 py-2">
-													Parent Email
-												</th>
-												<th className="border border-gray-300 px-4 py-2">
-													Parent Mobile
-												</th>
-												<th className="border border-gray-300 px-4 py-2">
-													Errors
-												</th>
-											</tr>
-										</thead>
-										<tbody>
-											{import_errors.map((error, index) => (
-												<tr key={index}>
-													<td className="border border-gray-300 px-4 py-2 text-center">
-														{error.row}
-													</td>
-													<td className="border border-gray-300 px-4 py-2">
-														{error.data.name || "N/A"}
-													</td>
-													<td className="border border-gray-300 px-4 py-2">
-														{error.data.class || "N/A"}
-													</td>
-													<td className="border border-gray-300 px-4 py-2">
-														{error.data.section || "N/A"}
-													</td>
-													<td className="border border-gray-300 px-4 py-2">
-														{error.data.dob || "N/A"}
-													</td>
-													<td className="border border-gray-300 px-4 py-2">
-														{error.data.gender || "N/A"}
-													</td>
-													<td className="border border-gray-300 px-4 py-2">
-														{error.data.parent_name || "N/A"}
-													</td>
-													<td className="border border-gray-300 px-4 py-2">
-														{error.data.parent_email || "N/A"}
-													</td>
-													<td className="border border-gray-300 px-4 py-2">
-														{error.data.parent_mobile || "N/A"}
-													</td>
-													<td className="border border-gray-300 px-4 py-2 text-red-500">
-														<ul className="list-disc list-inside">
-															{error.errors.map((err, idx) => (
-																<li key={idx}>{err}</li>
-															))}
-														</ul>
-													</td>
-												</tr>
-											))}
-										</tbody>
-									</table>
-								</div>
-							)} */}
 							{import_errors && import_errors.length > 0 && (
 								<div className="mt-6">
 									<h4 className="text-red-500 font-bold">

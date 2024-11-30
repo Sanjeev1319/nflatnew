@@ -31,4 +31,9 @@ Route::middleware(AuthSchoolMiddleware::class)->prefix('school')->name('school.'
 	Route::get('student_bulk_register', [SchoolDashboardController::class, 'studentBulkRegister'])->name('studentBulkRegister');
 
 	Route::get('student_list', [SchoolDashboardController::class, 'studentList'])->name('studentList');
+
+	Route::get('student-edit', [SchoolDashboardController::class, 'studentEdit'])->name('studentEdit');
+	Route::post('student-edit', [SchoolDashboardController::class, 'studentEditStore'])->name('studentEditStore');
+
+	Route::post('student_destroy', [SchoolDashboardController::class, 'studentDestroy'])->name('studentDestroy');
 });

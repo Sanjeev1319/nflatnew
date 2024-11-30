@@ -1,6 +1,7 @@
 import InputError from "@/Components/InputError";
 import InputLabel from "@/Components/InputLabel";
 import PrimaryButton from "@/Components/PrimaryButton";
+import SelectInput from "@/Components/SelectInput";
 import TextInput from "@/Components/TextInput";
 import GuestLayout from "@/Layouts/GuestLayout";
 import { Head, Link, useForm } from "@inertiajs/react";
@@ -100,6 +101,8 @@ export default function Register() {
 
 		// Send the request with the email converted to "email"
 		post(route("sendEmailOtp", { email: data.school_email }), {
+			preserveState: true, // Prevent page state from resetting
+			preserveScroll: true, // Prevent page scroll position from resetting
 			// email: data.school_email,  // Use 'email' instead of 'school_email'
 			onSuccess: (success) => {
 				setEmailOtpSent(true);
@@ -134,6 +137,8 @@ export default function Register() {
 
 		// Send the request with the email
 		post(route("verifyEmailOtp", { otp: data.school_email_otp }), {
+			preserveState: true, // Prevent page state from resetting
+			preserveScroll: true, // Prevent page scroll position from resetting
 			onSuccess: (success) => {
 				setEmailVerified(true);
 			},
@@ -156,6 +161,8 @@ export default function Register() {
 		e.preventDefault();
 
 		post(route("sendMobileOtp", { mobile: data.school_mobile }), {
+			preserveState: true, // Prevent page state from resetting
+			preserveScroll: true, // Prevent page scroll position from resetting
 			onSuccess: (success) => {
 				setMobileOtpSent(true);
 				setError({
@@ -183,6 +190,8 @@ export default function Register() {
 
 		// Send the request with the mobile
 		post(route("verifyMobileOtp", { otp: data.school_mobile_otp }), {
+			preserveState: true, // Prevent page state from resetting
+			preserveScroll: true, // Prevent page scroll position from resetting
 			onSuccess: (success) => {
 				setMobileVerified(true);
 			},
@@ -210,20 +219,22 @@ export default function Register() {
 	// Final form submit
 	const submit = (e) => {
 		e.preventDefault();
-		console.log(data);
 		post(route("school.register"), data);
 	};
 
 	return (
 		<GuestLayout>
 			<Head title="Register School" />
-			<div className="lg:px-8 sm:pb-32 pt-16 sm:px-6 py-24 lg:max-w-5xl sm:w-full mx-auto">
+			<div className="lg:px-8 py-10 sm:px-6 lg:max-w-5xl sm:w-full mx-auto">
 				<form
 					onSubmit={submit}
 					// className="md:grid-cols-3 gap-y-8 gap-x-8 grid-cols-1 grid"
 				>
 					{/* <div className="sm:px-0 px-4">School Details</div> */}
 					<div className="md:col-span-2 sm:rounded-lg ring-gray-900/5 ring-1 ring-offset-1 bg-white">
+						<h1 className="flex justify-center py-4 text-xl font-medium bg-gray-50 border-b border-gray-200 text-indigo-800">
+							School Registration Form
+						</h1>
 						<div className="px-10 py-7">
 							<div className="mb-6">
 								<InputLabel htmlFor="school_name" className="">
@@ -287,14 +298,7 @@ export default function Register() {
 									>
 										Area
 									</InputLabel>
-									{/* <TextInput
-										id="school_area"
-										value={data.school_area}
-										onChange={(e) => setData("school_area", e.target.value)}
-										required
-										className="w-full mt-2"
-									/> */}
-									<select
+									<SelectInput
 										id="school_area"
 										value={data.school_area}
 										onChange={(e) => setData("school_area", e.target.value)}
@@ -307,7 +311,7 @@ export default function Register() {
 												{area}
 											</option>
 										))}
-									</select>
+									</SelectInput>
 									<InputError message={errors.school_area} />
 								</div>
 							</div>
@@ -320,7 +324,7 @@ export default function Register() {
 									>
 										District
 									</InputLabel>
-									<select
+									<SelectInput
 										id="school_district"
 										value={data.school_district}
 										onChange={(e) => setData("school_district", e.target.value)}
@@ -333,7 +337,7 @@ export default function Register() {
 												{district}
 											</option>
 										))}
-									</select>
+									</SelectInput>
 									<InputError message={errors.school_district} />
 								</div>
 								<div>
@@ -343,7 +347,7 @@ export default function Register() {
 									>
 										State
 									</InputLabel>
-									<select
+									<SelectInput
 										id="school_state"
 										value={data.school_state}
 										onChange={(e) => setData("school_state", e.target.value)}
@@ -356,8 +360,7 @@ export default function Register() {
 												{state}
 											</option>
 										))}
-									</select>
-
+									</SelectInput>
 									<InputError message={errors.school_state} />
 								</div>
 							</div>
@@ -560,10 +563,11 @@ export default function Register() {
 								</div>
 							</div>
 						</div>
-						<div className="sm:px-8 py-4 px-4 border-gray-900/10 border-t gap-6 justify-end items-center flex">
+						<div className="sm:px-8 py-4 px-4 border-gray-900/10 border-t gap-6 justify-center items-center flex">
 							<PrimaryButton
 								disabled={!emailVerified || !mobileVerified}
 								type="submit"
+								className="py-3 px-6"
 							>
 								Register
 							</PrimaryButton>
