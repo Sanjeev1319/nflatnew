@@ -65,6 +65,16 @@ export default function DataTable({ tableValues, count }) {
 						</tr>
 					</thead>
 					<tbody className="">
+						{tableValues.data.length <= 0 && (
+							<tr key="no" className="border-b hover:bg-violet-100">
+								<td
+									className="px-3 py-3 text-center font-medium text-base"
+									colSpan="10"
+								>
+									No Records Found!
+								</td>
+							</tr>
+						)}
 						{tableValues.data.map((student, index) => (
 							<tr key={student.id} className=" border-b hover:bg-violet-100">
 								<td className="px-3 py-3">{startingIndex + index}</td>
@@ -93,9 +103,9 @@ export default function DataTable({ tableValues, count }) {
 								<td className="px-3 py-3">{student.gender}</td>
 								<td className="px-3 py-3">{student.parent_name}</td>
 								<td className="px-3 py-3">
-									{student.parent_email_id || "N/A"}
+									{student.parent_email_id || " "}
 									<br />
-									{student.parent_mobile_number || "N/A"}
+									{student.parent_mobile_number || " "}
 								</td>
 								<td className="px-3 py-3">{student.password}</td>
 								<td className="text-center">

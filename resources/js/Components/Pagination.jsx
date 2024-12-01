@@ -54,7 +54,7 @@ export default function Pagination({ links, count }) {
 								className={
 									"font-medium leading-5 pt-4 border-transparent border-t-2 items-center inline-flex px-4 " +
 									(link.active
-										? " text-indigo-700 font-semibold border-indigo-700 "
+										? " text-indigo-700 font-semibold border-indigo-700 border-t-2 "
 										: " text-[#6b7280] ") +
 									(!link.url
 										? "!text-gray-500 cursor-not-allowed "

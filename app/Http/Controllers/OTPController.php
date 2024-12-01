@@ -66,9 +66,9 @@ class OTPController extends Controller
 		$request->session()->put('mobile', $request->mobile);
 		Log::info('Mobile OTP for ' . $request->mobile . ': ' . $otp);
 
-		// Use an SMS service here
-		// For example: Twilio, Nexmo, etc.
-		// For demonstration, we're just returning the OTP
+		// Send the SMS using the SMSController
+		$smsController = new SMSController($otp, $request->mobile);
+		$smsController->sendSMS();
 
 		// Redirect back with a success message (you can use session to flash the success message)
 		return redirect()->back()->with('success', 'OTP sent to your mobile successfully.');

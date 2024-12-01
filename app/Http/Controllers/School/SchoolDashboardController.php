@@ -266,6 +266,8 @@ class SchoolDashboardController extends Controller
 			->where('date_of_birth', $request->dob)
 			->where('gender', $request->gender)
 			->where('parent_name', $request->parent_name)
+			->where('parent_email_id', $request->parent_email)
+			->where('parent_mobile_number', $request->parent_mobile)
 			->exists();  // Use exists() to check if any record matches the given criteria
 
 		// If a duplicate is found, return an error

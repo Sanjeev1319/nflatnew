@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Mail\SchoolRegistrationMail;
 use App\Models\School;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
@@ -52,7 +53,22 @@ class SchoolRegisterController extends Controller
 
 		// Generate a random 8-character alphanumeric password
 		$randomPassword = str::random(8);
-		$school_uuid = strtoupper(Str::random(10));
+
+		// generate a new uuid
+		// Fetch the last student with UUID
+		$lastStudent = School::latest('school_uuid')->first();
+		$lastNumber = $lastStudent ? (int) substr($lastStudent->school_uuid, 8) : 1000;  // Default to 1000 if no student exists
+		// Increment the number
+		$newNumber = $lastNumber + 1;
+
+		// dd($newNumber);
+
+		$region = DB::table('pincodes')->where('state', $request->school_state)->first();
+		$regionSubStr = strtoupper(substr($region->region, 0, 3));
+
+		$school_uuid = strtoupper($regionSubStr . substr($request->school_state, 0, 2) . substr($request->school_district, 0, 3) . $newNumber);
+
+
 		$school_name = $request->school_name;
 		$school_email = $request->school_email;
 
