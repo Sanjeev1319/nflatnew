@@ -83,6 +83,12 @@ export default function AuthenticatedLayout({ header, children }) {
 
 									<Dropdown.Content>
 										<Dropdown.Link
+											href={route("school.profileView")}
+											as="button"
+										>
+											Profile
+										</Dropdown.Link>
+										<Dropdown.Link
 											href={route("school.logout")}
 											method="post"
 											as="button"

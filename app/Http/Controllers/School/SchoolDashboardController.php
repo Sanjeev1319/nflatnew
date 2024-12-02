@@ -5,8 +5,10 @@ namespace App\Http\Controllers\School;
 use App\Imports\StudentsImport;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\SchoolResource;
 use App\Http\Resources\StudentListResource;
 use App\Http\Resources\StudentResource;
+use App\Models\School;
 use App\Models\Student;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -294,5 +296,22 @@ class SchoolDashboardController extends Controller
 		]);
 
 		return redirect()->route('school.dashboard')->with('success', 'Student details edited successfully.');
+	}
+
+
+	/**
+	 * View school profile
+	 *
+	 */
+	public function profileView()
+	{
+		$school_uuid = auth::guard('school')->user()->school_uuid;
+
+		// dd($request->student);
+		$school_data = School::where('school_uuid', $school_uuid)->get();
+		dd($school_data->school_uuid);
+		return Inertia::render('School/Profile', [
+			'school' => new SchoolResource($school_data),
+		]);
 	}
 }

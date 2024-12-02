@@ -26,7 +26,10 @@ Route::middleware(AuthSchoolMiddleware::class)->prefix('school')->name('school.'
 	Route::get('dashboard', [SchoolDashboardController::class, 'index'])->name('dashboard');
 	Route::get('/', [SchoolDashboardController::class, 'index'])->name('index');
 
+	Route::get('profile', [SchoolDashboardController::class, 'profileView'])->name('profileView');
+
 	Route::get('student_register', [SchoolDashboardController::class, 'studentRegister'])->name('studentRegister');
+
 	Route::post('student_register', [SchoolDashboardController::class, 'studentRegisterStore']);
 
 	Route::get('student_bulk_register', [SchoolDashboardController::class, 'studentBulkRegister'])->name('studentBulkRegister');
